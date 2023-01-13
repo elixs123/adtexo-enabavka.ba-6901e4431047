@@ -1,0 +1,1344 @@
+{
+	"info": {
+		"_postman_id": "4c6064b3-1805-409b-8c11-a968b6c3933e",
+		"name": "enabavka",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Documents",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "XMLHttpRequest",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/documents?type_id[]=order&limit=10&sync_status=for_sync",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"documents"
+							],
+							"query": [
+								{
+									"key": "status[]",
+									"value": "invoiced",
+									"disabled": true
+								},
+								{
+									"key": "type_id[]",
+									"value": "order"
+								},
+								{
+									"key": "client_id",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "keywords",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "start_date",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "end_date",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "created_by",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "sync_status",
+									"value": "for_sync",
+									"description": "for_sync,failed,synchronized"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sync: Failed",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/documents/sync/failed?ids[]=154,155,156,157,158",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"documents",
+								"sync",
+								"failed"
+							],
+							"query": [
+								{
+									"key": "ids[]",
+									"value": "154,155,156,157,158"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sync: Synchronized",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/documents/sync/synchronized?ids[]=1",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"documents",
+								"sync",
+								"synchronized"
+							],
+							"query": [
+								{
+									"key": "ids[]",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Log",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "XMLHttpRequest",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/logs?limit=20",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"logs"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "XMLHttpRequest",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/document-logs?document_id=97&text=test",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"document-logs"
+							],
+							"query": [
+								{
+									"key": "document_id",
+									"value": "97"
+								},
+								{
+									"key": "text",
+									"value": "test"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "XMLHttpRequest",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/logs/6",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"logs",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Clients",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Requested-With",
+								"type": "text",
+								"value": "XMLHttpRequest"
+							}
+						],
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/clients?limit=10&sync_status=for_sync",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"clients"
+							],
+							"query": [
+								{
+									"key": "status[]",
+									"value": "invoiced",
+									"disabled": true
+								},
+								{
+									"key": "type_id[]",
+									"value": "order",
+									"disabled": true
+								},
+								{
+									"key": "client_id",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "keywords",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "start_date",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "end_date",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "created_by",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "sync_status",
+									"value": "for_sync",
+									"description": "for_sync,failed,synchronized"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Requested-With",
+								"type": "text",
+								"value": "XMLHttpRequest"
+							}
+						],
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/clients?limit=10&sync_status=for_sync",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"clients"
+							],
+							"query": [
+								{
+									"key": "status[]",
+									"value": "invoiced",
+									"disabled": true
+								},
+								{
+									"key": "type_id[]",
+									"value": "order",
+									"disabled": true
+								},
+								{
+									"key": "client_id",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "keywords",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "start_date",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "end_date",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "created_by",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "sync_status",
+									"value": "for_sync",
+									"description": "for_sync,failed,synchronized"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store (HQ)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "XMLHttpRequest",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/clients?type_id=business_client&jib=4300000000000&pib=300000000000&code=&name=Test d.o.o.&address=Hasana Brkića 45&city=SARAJEVO&postal_code=71000&country_id=bih&latitude=43.831319&longitude=18.332153&phone=38761903334123&status=active&note=&payment_therms=payment&payment_period=30_days_period&payment_type=wire_transfer_payment&payment_discount=0&discount_value1=0&discount_value2=0&stock_id=1&lang_id=bs&is_location=0",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"clients"
+							],
+							"query": [
+								{
+									"key": "parent_id",
+									"value": "",
+									"description": "nullable|integer",
+									"disabled": true
+								},
+								{
+									"key": "type_id",
+									"value": "business_client",
+									"description": "required|business_client,private_client"
+								},
+								{
+									"key": "jib",
+									"value": "4300000000000",
+									"description": "(($type == 'private_client') ? 'nullable' : 'required').'|max:13"
+								},
+								{
+									"key": "pib",
+									"value": "300000000000",
+									"description": "nullable|max:12"
+								},
+								{
+									"key": "code",
+									"value": "",
+									"description": "nullable|min:2|max:50|unique:clients,code"
+								},
+								{
+									"key": "name",
+									"value": "Test d.o.o.",
+									"description": "required|min:2|max:100"
+								},
+								{
+									"key": "address",
+									"value": "Hasana Brkića 45",
+									"description": "required|min:2|max:100"
+								},
+								{
+									"key": "city",
+									"value": "SARAJEVO",
+									"description": "required|min:2|max:100, mora biti iz tabele cities"
+								},
+								{
+									"key": "postal_code",
+									"value": "71000",
+									"description": "required|min:3|max:20, mora biti iz tabele cities"
+								},
+								{
+									"key": "country_id",
+									"value": "bih",
+									"description": "required|min:2|max:100"
+								},
+								{
+									"key": "latitude",
+									"value": "43.831319",
+									"description": "nullable|numeric|min:-90|max:90|required_with:longitude"
+								},
+								{
+									"key": "longitude",
+									"value": "18.332153",
+									"description": "nullable|numeric|min:-180|max:180|required_with:latitude"
+								},
+								{
+									"key": "phone",
+									"value": "38761903334123"
+								},
+								{
+									"key": "status",
+									"value": "active",
+									"description": "required"
+								},
+								{
+									"key": "note",
+									"value": "",
+									"description": "max:255"
+								},
+								{
+									"key": "payment_therms",
+									"value": "payment",
+									"description": "required|in:payment,compensation,consignment"
+								},
+								{
+									"key": "payment_period",
+									"value": "30_days_period",
+									"description": "required|in: 00_days_period, 7_days_period, 30_days_period, 45_days_period, 50_days_period, 60_days_period"
+								},
+								{
+									"key": "payment_type",
+									"value": "wire_transfer_payment",
+									"description": "required|in:wire_transfer_payment,credit_card_payment,cash_payment,advance_payment"
+								},
+								{
+									"key": "payment_discount",
+									"value": "0",
+									"description": "required|numeric|min:0|max:100"
+								},
+								{
+									"key": "discount_value1",
+									"value": "0",
+									"description": "required|numeric|min:0|max:100"
+								},
+								{
+									"key": "discount_value2",
+									"value": "0",
+									"description": "required|numeric|min:0|max:100"
+								},
+								{
+									"key": "stock_id",
+									"value": "1",
+									"description": "required|integer|min:1"
+								},
+								{
+									"key": "lang_id",
+									"value": "bs",
+									"description": "required|min:2|max:2|in:bs,sr"
+								},
+								{
+									"key": "is_location",
+									"value": "0",
+									"description": "required|in: 0,1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store (Location)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Requested-With",
+								"type": "text",
+								"value": "XMLHttpRequest"
+							}
+						],
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/clients?parent_id=4871&type_id=business_client&jib=4300000000000&pib=300000000000&code=test001&name=Test d.o.o.&address=Hasana Brkića 45&city=SARAJEVO&postal_code=71000&country_id=bih&latitude=43.831319&longitude=18.332153&phone=38761903334123&status=active&note=&payment_therms=payment&payment_period=30_days_period&payment_type=wire_transfer_payment&payment_discount=0&discount_value1=0&discount_value2=0&stock_id=1&lang_id=bs&is_location=1&location_name=Test d.o.o. PJ1&location_code=test001pj1",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"clients"
+							],
+							"query": [
+								{
+									"key": "parent_id",
+									"value": "4871",
+									"description": "nullable|integer"
+								},
+								{
+									"key": "type_id",
+									"value": "business_client",
+									"description": "required|business_client,private_client"
+								},
+								{
+									"key": "jib",
+									"value": "4300000000000",
+									"description": "(($type == 'private_client') ? 'nullable' : 'required').'|max:13"
+								},
+								{
+									"key": "pib",
+									"value": "300000000000",
+									"description": "nullable|max:12"
+								},
+								{
+									"key": "code",
+									"value": "test001",
+									"description": "nullable|min:2|max:50|unique:clients,code"
+								},
+								{
+									"key": "name",
+									"value": "Test d.o.o.",
+									"description": "required|min:2|max:100"
+								},
+								{
+									"key": "address",
+									"value": "Hasana Brkića 45",
+									"description": "required|min:2|max:100"
+								},
+								{
+									"key": "city",
+									"value": "SARAJEVO",
+									"description": "required|min:2|max:100, mora biti iz tabele cities"
+								},
+								{
+									"key": "postal_code",
+									"value": "71000",
+									"description": "required|min:3|max:20, mora biti iz tabele cities"
+								},
+								{
+									"key": "country_id",
+									"value": "bih",
+									"description": "required|min:2|max:100"
+								},
+								{
+									"key": "latitude",
+									"value": "43.831319",
+									"description": "nullable|numeric|min:-90|max:90|required_with:longitude"
+								},
+								{
+									"key": "longitude",
+									"value": "18.332153",
+									"description": "nullable|numeric|min:-180|max:180|required_with:latitude"
+								},
+								{
+									"key": "phone",
+									"value": "38761903334123"
+								},
+								{
+									"key": "status",
+									"value": "active",
+									"description": "required"
+								},
+								{
+									"key": "note",
+									"value": "",
+									"description": "max:255"
+								},
+								{
+									"key": "payment_therms",
+									"value": "payment",
+									"description": "required|in:payment,compensation,consignment"
+								},
+								{
+									"key": "payment_period",
+									"value": "30_days_period",
+									"description": "required|in: 00_days_period, 7_days_period, 30_days_period, 45_days_period, 50_days_period, 60_days_period"
+								},
+								{
+									"key": "payment_type",
+									"value": "wire_transfer_payment",
+									"description": "required|in:wire_transfer_payment,credit_card_payment,cash_payment,advance_payment"
+								},
+								{
+									"key": "payment_discount",
+									"value": "0",
+									"description": "required|numeric|min:0|max:100"
+								},
+								{
+									"key": "discount_value1",
+									"value": "0",
+									"description": "required|numeric|min:0|max:100"
+								},
+								{
+									"key": "discount_value2",
+									"value": "0",
+									"description": "required|numeric|min:0|max:100"
+								},
+								{
+									"key": "stock_id",
+									"value": "1",
+									"description": "required|integer|min:1"
+								},
+								{
+									"key": "lang_id",
+									"value": "bs",
+									"description": "required|min:2|max:2|in:bs,sr"
+								},
+								{
+									"key": "is_location",
+									"value": "1",
+									"description": "required|in: 0,1"
+								},
+								{
+									"key": "location_name",
+									"value": "Test d.o.o. PJ1"
+								},
+								{
+									"key": "location_code",
+									"value": "test001pj1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Store",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Requested-With",
+								"type": "text",
+								"value": "XMLHttpRequest"
+							}
+						],
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/products?translation[lang_id]=bs&translation[name]=Test artikal 1&item[code]=sifra_iz_pantheona233&item[brand_id]=1&item[category_id]=56&translation[text]=Polica za ljepila\nSpecifikacija: 3 kukice\nBroj artikala: Ukupno 21 artikal može stati na policu&item[status]=active&item[rang]=1&item[unit_id]=kom&item[loyalty_points]=0&item[is_gratis]=0&prices[bih][mpc]=1&prices[bih][mpc_old]=1&prices[bih][vpc]=1&prices[bih][vpc_old]=1&prices[bih][mpc_eur]=1&prices[bih][mpc_eur_old]=1&prices[bih][vpc_eur]=1&prices[bih][vpc_eur_old]=1&prices[srb][mpc]=1&prices[srb][mpc_old]=1&prices[srb][vpc]=1&prices[srb][vpc_old]=1&prices[srb][mpc_eur]=1&prices[srb][mpc_eur_old]=1&prices[srb][vpc_eur]=1&prices[srb][vpc_eur_old]=1",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"products"
+							],
+							"query": [
+								{
+									"key": "translation[lang_id]",
+									"value": "bs",
+									"description": "required|in:bs,sr"
+								},
+								{
+									"key": "translation[name]",
+									"value": "Test artikal 1",
+									"description": "required|max:255"
+								},
+								{
+									"key": "item[code]",
+									"value": "sifra_iz_pantheona233",
+									"description": "required|unique"
+								},
+								{
+									"key": "item[barcode]",
+									"value": "3875001231893",
+									"description": "nullable",
+									"disabled": true
+								},
+								{
+									"key": "item[brand_id]",
+									"value": "1",
+									"description": "required|integer"
+								},
+								{
+									"key": "item[category_id]",
+									"value": "56",
+									"description": "required|integer"
+								},
+								{
+									"key": "item[video]",
+									"value": "https://www.youtube.com/watch?v=eM_LhSznazA ",
+									"description": "nullable",
+									"disabled": true
+								},
+								{
+									"key": "translation[text]",
+									"value": "Polica za ljepila\nSpecifikacija: 3 kukice\nBroj artikala: Ukupno 21 artikal može stati na policu",
+									"description": "nullable"
+								},
+								{
+									"key": "item[status]",
+									"value": "active",
+									"description": "required|in:active,inactive"
+								},
+								{
+									"key": "item[rang]",
+									"value": "1",
+									"description": "required|integer"
+								},
+								{
+									"key": "item[unit_id]",
+									"value": "kom",
+									"description": "required|in:kom,m2,set,paket"
+								},
+								{
+									"key": "item[packing]",
+									"value": "",
+									"description": "nullable",
+									"disabled": true
+								},
+								{
+									"key": "item[transport_packaging]",
+									"value": "",
+									"description": "nullable",
+									"disabled": true
+								},
+								{
+									"key": "item[palette]",
+									"value": "",
+									"description": "nullable",
+									"disabled": true
+								},
+								{
+									"key": "item[weight]",
+									"value": "10",
+									"description": "nullable|integer",
+									"disabled": true
+								},
+								{
+									"key": "item[length]",
+									"value": "10",
+									"description": "nullable|integer",
+									"disabled": true
+								},
+								{
+									"key": "item[width]",
+									"value": "10",
+									"description": "nullable|integer",
+									"disabled": true
+								},
+								{
+									"key": "item[height]",
+									"value": "10",
+									"description": "nullable|integer",
+									"disabled": true
+								},
+								{
+									"key": "item[loyalty_points]",
+									"value": "0",
+									"description": "required|integer"
+								},
+								{
+									"key": "item[is_gratis]",
+									"value": "0",
+									"description": "required|in:0,1"
+								},
+								{
+									"key": "prices[bih][mpc]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "prices[bih][mpc_old]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "prices[bih][vpc]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "prices[bih][vpc_old]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "prices[bih][mpc_eur]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "prices[bih][mpc_eur_old]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "prices[bih][vpc_eur]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "prices[bih][vpc_eur_old]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "prices[srb][mpc]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "prices[srb][mpc_old]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "prices[srb][vpc]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "prices[srb][vpc_old]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "prices[srb][mpc_eur]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "prices[srb][mpc_eur_old]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "prices[srb][vpc_eur]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "prices[srb][vpc_eur_old]",
+									"value": "1",
+									"description": "required|numeric"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Requested-With",
+								"type": "text",
+								"value": "XMLHttpRequest"
+							}
+						],
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/products/1",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Stocks",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Requested-With",
+								"type": "text",
+								"value": "XMLHttpRequest"
+							}
+						],
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/stocks?country_id=bih&status=active",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"stocks"
+							],
+							"query": [
+								{
+									"key": "country_id",
+									"value": "bih"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								},
+								{
+									"key": "keywords",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "active"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Requested-With",
+								"type": "text",
+								"value": "XMLHttpRequest"
+							}
+						],
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/stocks?code=14455&name=Test&original_name=Test2&status=active&email=emir.agic@lampa.ba&phone=061903334&address=Hasana Brkića 45&city=Sarajevo&postal_code=71000&country_id=bih&currency=KM&tax_rate=17",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"stocks"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "14455",
+									"description": "required"
+								},
+								{
+									"key": "name",
+									"value": "Test",
+									"description": "required|max:100"
+								},
+								{
+									"key": "original_name",
+									"value": "Test2",
+									"description": "required|max:100"
+								},
+								{
+									"key": "status",
+									"value": "active",
+									"description": "required|in:active,inactive"
+								},
+								{
+									"key": "email",
+									"value": "emir.agic@lampa.ba",
+									"description": "required|email"
+								},
+								{
+									"key": "phone",
+									"value": "061903334",
+									"description": "required|max:20"
+								},
+								{
+									"key": "address",
+									"value": "Hasana Brkića 45",
+									"description": "required|max:100"
+								},
+								{
+									"key": "city",
+									"value": "Sarajevo",
+									"description": "required|max:100"
+								},
+								{
+									"key": "postal_code",
+									"value": "71000",
+									"description": "required|max:20"
+								},
+								{
+									"key": "country_id",
+									"value": "bih",
+									"description": "required|in:bih,srb"
+								},
+								{
+									"key": "currency",
+									"value": "KM"
+								},
+								{
+									"key": "tax_rate",
+									"value": "17"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Requested-With",
+								"type": "text",
+								"value": "XMLHttpRequest"
+							}
+						],
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/stocks/1",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"stocks",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sync Qty",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Requested-With",
+								"type": "text",
+								"value": "XMLHttpRequest"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"stock_id\": 1,\r\n        \"product_id\": 13,\r\n        \"available_qty\": 1,\r\n        \"reserved_qty\": 0\r\n    },\r\n    {\r\n        \"stock_id\": 1,\r\n        \"product_id\": 13,\r\n        \"available_qty\": 1,\r\n        \"reserved_qty\": 0\r\n    }    \r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/stocks/sync-qty",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"stocks",
+								"sync-qty"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product Stock",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Requested-With",
+								"type": "text",
+								"value": "XMLHttpRequest"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{EN_API_URL}}/{{EN_API_VERSION}}/stocks/product/stock?stock_id=1&product_id=13&qty=-1000",
+							"host": [
+								"{{EN_API_URL}}"
+							],
+							"path": [
+								"{{EN_API_VERSION}}",
+								"stocks",
+								"product",
+								"stock"
+							],
+							"query": [
+								{
+									"key": "stock_id",
+									"value": "1"
+								},
+								{
+									"key": "product_id",
+									"value": "13"
+								},
+								{
+									"key": "qty",
+									"value": "-1000"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "YeZrMkkp9PkygYD3hbNDJthauJz2JEGNQtMUj9G7gUDyauExHGMHXjVknxQKxyaVEGgbLneJP6uL5XZ4",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "EN_API_URL",
+			"value": "https://dev.enabavka.ba/api"
+		},
+		{
+			"key": "EN_API_VERSION",
+			"value": "v1"
+		}
+	]
+}

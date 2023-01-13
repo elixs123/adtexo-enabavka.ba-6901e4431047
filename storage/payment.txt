@@ -1,0 +1,5 @@
++ upload to storage
++ payment config (for parsing)
++ document (cijena koja se salje brzoj posti)
++ payment (tip: brza posta, licno preuzimanje | brza posta)
+dashboard:

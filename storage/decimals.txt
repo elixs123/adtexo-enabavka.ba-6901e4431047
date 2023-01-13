@@ -1,0 +1,4 @@
+product_prices
+document_products
+documents
+actions

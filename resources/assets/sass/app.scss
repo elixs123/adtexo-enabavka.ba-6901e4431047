@@ -1,0 +1,31 @@
+/* Colors */
+
+/* Vendors */
+@import 'vendors/select2';
+@import 'vendors/toastr';
+@import 'vendors/magnific-popup';
+@import 'vendors/pickadate';
+@import 'vendors/bootstrap-datepicker/datepicker';
+@import 'vendors/bootstrap-datepicker/datepicker3';
+@import 'vendors/bootstrap-daterangepicker/daterangepicker-bs3';
+/* Bootstrap */
+@import 'bootstrap.min';
+@import 'bootstrap-extended.min';
+/* Theme */
+@import 'dist/colors.min';
+@import 'dist/components.min';
+@import 'dist/dark-layout.min';
+@import 'dist/semi-dark-layout.min';
+@import 'dist/vertical-menu.min';
+@import 'dist/invoice.min';
+//@import 'colors';
+//@import 'components';
+//@import 'themes/dark-layout';
+//@import 'themes/semi-dark-layout';
+//@import 'core/menu/menu-types/vertical-menu';
+@import 'plugins/extensions/toastr';
+@import 'plugins/extensions/drag-and-drop';
+@import 'plugins/forms/select2/select2';
+/* Custom styles */
+@import 'mixins';
+@import 'styles';

@@ -1,0 +1,16 @@
+@mixin displayFlex {
+    display: -ms-flexbox;
+    display: flex;
+}
+
+@mixin flexGrid {
+    @include displayFlex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+@mixin flexWidth($w: 100%) {
+    -ms-flex: 0 0 $w;
+    flex: 0 0 $w;
+    max-width: $w;
+}
