@@ -56,21 +56,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                         </div>
                         <ul class="nav navbar-nav float-right">
                             <!-- start: language -->
-                            <li class="dropdown dropdown-language nav-item">
-                                <a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="flag-icon flag-icon-{{ langToIcon($lang_id = Cookie::get('lang_id', config('app.locale'))) }}"></i><span class="selected-language">{{ config('app.locales.'.$lang_id, '-') }}</span>
-                                </a>
-                                @if(!userIsClient())
-                                <div class="dropdown-menu" aria-labelledby="dropdown-flag">
-                                    @foreach(config('app.locales') as $lid => $lnm)
-                                    <a class="dropdown-item @if($lid == $lang_id){{ 'active' }}@endif" href="#" data-language="{{ $lid }}"><i class="flag-icon flag-icon-{{ langToIcon($lid) }}"></i> {{ $lnm }}</a>
-                                    @endforeach
-                                </div>
-                                {!! Form::open(['url' => route('lang.change'), 'method' => 'post', 'files' => false, 'class' => 'change-lang-form']) !!}
-                                    {!! Form::hidden('lang_id', $lang_id) !!}
-                                {!! Form::close() !!}
-                                @endif
-                            </li>
+                            
                             <!-- end: language -->
                             <!-- start: full screen -->
                             <li class="dropdown dropdown-shortcuts nav-item">
@@ -202,12 +188,16 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                 <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
                     <li class="nav-item">
                         <a href="#">
-                            <i class="feather icon-flag"></i>
+                           
+                           
                             @if(session('db_name') == 'ba')
+                            <i class="flag-icon flag-icon-ba"></i>
                                 <span class="menu-title">Bosna i Hercegovina</span>
                             @elseif(session('db_name') == 'sr')
+                            <i class="flag-icon flag-icon-rs"></i>
                                 <span class="menu-title">Srbija</span>
                             @else
+                            <i class="flag-icon flag-icon-hr"></i>
                                 <span class="menu-title">Hrvatska</span>
                             @endif
                         </a>
