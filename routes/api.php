@@ -13,7 +13,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['namespace' => 'Api', 'prefix' => 'v1', 'middleware' => 'auth:api'], function () {
+Route::group(['namespace' => 'Api', 'prefix' => '{db}', 'middleware' => 'auth:api'], function () {
     // Documents
 	Route::get('/documents', 'DocumentController@index');
 	Route::post('/documents/sync/{status}', 'DocumentController@sync');
@@ -29,10 +29,18 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1', 'middleware' => 'auth:api'
         'show', 'store'
     ]);
 
+
     // Brands
-    Route::resource('brands', BrandController::class)->only([
+    /*Route::resource('brands', BrandController::class)->only([
         'show', 'store', 'index'
-    ]);
+    ]);*/
+    
+    
+    Route::get('brands', 'BrandController@getAll');
+    Route::get('brands/{id}', 'BrandController@getOne');
+    
+    Route::post('brands/insert', 'BrandController@insertBrand');
+    Route::post('brands/update/{id}', 'BrandController@updateBrand');
 
     // Categories
     Route::post('categories/{id}/translate', 'CategoryController@translate');

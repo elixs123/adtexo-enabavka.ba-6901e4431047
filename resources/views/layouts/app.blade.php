@@ -200,6 +200,19 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
             <div class="shadow-bottom"></div>
             <div class="main-menu-content">
                 <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+                    <li class="nav-item">
+                        <a href="#">
+                            <i class="feather icon-flag"></i>
+                            @if(session('db_name') == 'ba')
+                                <span class="menu-title">Bosna i Hercegovina</span>
+                            @elseif(session('db_name') == 'sr')
+                                <span class="menu-title">Srbija</span>
+                            @else
+                                <span class="menu-title">Hrvatska</span>
+                            @endif
+                        </a>
+                    </li>
+                    <hr>
                     <li class="nav-item @if(request()->is('/')){{ 'active' }}@endif">
                         <a href="{{ route('dashboard') }}">
                             <i class="feather icon-home"></i>

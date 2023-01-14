@@ -70,6 +70,8 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
+        $request->session()->put('db_name', $request->input('database'));
+
         $lang_id = 'bs';
         
         if ($user->isClient() && !is_null($user->client->lang_id)) {

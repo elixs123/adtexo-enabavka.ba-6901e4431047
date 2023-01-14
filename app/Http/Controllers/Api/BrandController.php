@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Brand;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Brand\BrandResource as ModelResource;
-use App\Http\Resources\Brand\BrandCollection as ModelCollection;
-use App\Http\Requests\Brand\StoreApiBrandRequest;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 
 /**
  * Class BrandController
@@ -15,63 +15,53 @@ use App\Http\Requests\Brand\StoreApiBrandRequest;
  */
 class BrandController extends Controller
 {
-    /**
-     * @var \App\Brand
-     */
-    private $brand;
-
-    /**
-     * BrandController constructor.
-     *
-     * @param \App\Brand $brand
-     * @param ProductBrand $productBrand
-     */
-    public function __construct(Brand $brand) {
-        $this->brand = $brand;
+    public function getAll(){
+        $brands = Brand::all();
+        
+        return $brands;
     }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response|\Illuminate\View\View|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     * @throws \Throwable
-     */
-    public function index()
-    {
-        $this->brand->paginate = true;
-        $this->brand->limit = request('limit', 100);
-        $this->brand->statusId = request('status');
-        $this->brand->keywords = request('keywords');
-        $items = $this->brand->getAll();
-
-        return new ModelCollection($items);
+    
+    public function getOne($lang, $id){
+        try
+        {
+            $brand = Brand::find($id);
+        }
+        // catch(Exception $e) catch any exception
+        catch(ModelNotFoundException $e)
+        {
+           return $e;
+        }
+        
+        return $brand;
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param StoreApiBrandRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
-     */
-    public function store(StoreApiBrandRequest $request)
-    {
-        $input = $request->all();
-        $input['slug'] = str_slug($input['name']);
-
-        $brand = $this->brand->updateOrCreate(['name' => $input['name']], $input);
-
-        return new ModelResource($brand);
+    
+    public function insertBrand(Request $request){
+        $request->validate([
+            'name' => 'required|max:100'
+            ]);
+        
+        Brand::create($request->all());
+        
+        return response()->json(
+            ['message' => 'Uspje分no ste kreirali brand ' . $request->input('name'), 'status' => 'T']
+        );
     }
-
-    /**
-     * @param int $id
-     * @return \App\Http\Resources\Client\ClientResource
-     */
-    public function show($id)
-    {
-        $item = $this->brand->getOne($id);
-
-        return new ModelResource($item);
+    
+    public function updateBrand(Request $request){
+        $request->validate([
+            'id' => 'required',
+            'name' => 'required'
+            ]);
+        
+        $brand = Brand::find($request->input('id'));
+        
+        
+        $brand->name = $request->input('name');
+        
+        $brand->save();
+        
+        return response()->json(
+            ['message' => 'Uspje分no ste azurirali brand id ' . $request->input('id'), 'status' => 'T']
+        );
     }
 }

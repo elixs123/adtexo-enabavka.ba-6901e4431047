@@ -38,6 +38,16 @@
                                         </div>
                                         <label for="user-password">{{ trans('auth.pages.login.form.password') }}</label>
                                     </fieldset>
+                                    <fieldset class="form-label-group position-relative has-icon-left">
+                                        <select name="database" id="database" class="form-control" >
+                                            <option value="ba" class="form-control">Bosna i Hercegovina</option>
+                                            <option value="rs" class="form-control">Srbija</option>
+                                            <option value="hr" class="form-control">Hrvatska</option>
+                                        </select>
+                                        <div class="form-control-position">
+                                            <i class="feather icon-flag"></i>
+                                        </div>
+                                    </fieldset>
                                     <div class="form-group d-flex justify-content-between align-items-center">
                                         <div class="text-left">
                                             <fieldset class="checkbox">
