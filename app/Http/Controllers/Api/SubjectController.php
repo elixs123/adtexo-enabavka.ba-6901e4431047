@@ -41,11 +41,7 @@ class SubjectController extends Controller
         try{
 
         $category = new Subject;
-        $category->acSubject = $request->input('acSubject');
-        $category->acName2 = $request->input('acName2');
-        $category->acAddress = $request->input('acAddress');
-
-        $category->save();
+        $category->create($request->all());
 
         }catch(ModelNotFoundException $e){
             return response()->json([
