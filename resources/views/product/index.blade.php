@@ -47,7 +47,7 @@
                 <!-- start: items -->
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">{{ $title }} <span class="badge badge-primary" data-row-count>0</span></h4>
+                        <h4 class="card-title">{{ $title }} <span class="badge badge-primary" data-row-count>{{ $items->count() }}</span></h4>
                         <a data-action="expand" class="pull-right"><i class="feather icon-maximize"></i></a>
                     </div>
                     <div class="card-content">
@@ -102,6 +102,9 @@
                             <div class="no-results" data-no-results>
                                 <h5>{{ trans('skeleton.no_results') }}</h5>
                             </div>
+                        </div>
+                        <div class="card-footer">
+                            {!! $items->appends(request()->query())->render() !!}
                         </div>
                     </div>
                 </div>

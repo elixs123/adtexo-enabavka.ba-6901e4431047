@@ -66,6 +66,9 @@
                                 <h5>{{ trans('skeleton.no_results') }}</h5>
                             </div>
                         </div>
+                        <div class="card-footer">
+                            {!! $items->appends(request()->query())->render() !!}
+                        </div>
                     </div>
                 </div>
                 <!-- end: items -->

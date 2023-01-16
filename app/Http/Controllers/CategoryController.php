@@ -56,7 +56,8 @@ class CategoryController extends Controller
 
         $this->category->langId = $langId;
         $this->category->statusId = $statusId;
-        $items = $this->category::all();
+        $items = $this->category::paginate(10);
+
         
         return view('category.index', array(
             'items' => $items,
