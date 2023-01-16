@@ -21,15 +21,17 @@ class BrandController extends Controller
         return $brands;
     }
     
-    public function getOne($lang, $id){
+    public function getOne($id){
         try
         {
             $brand = Brand::find($id);
         }
-        // catch(Exception $e) catch any exception
         catch(ModelNotFoundException $e)
         {
-           return $e;
+            return response()->json([
+                'message' => 'Greška prilikom preuzimanja brendova',
+                'status' => 'F' 
+            ]);
         }
         
         return $brand;
@@ -43,7 +45,7 @@ class BrandController extends Controller
         Brand::create($request->all());
         
         return response()->json(
-            ['message' => 'Uspje分no ste kreirali brand ' . $request->input('name'), 'status' => 'T']
+            ['message' => 'Uspješno ste kreirali brand ' . $request->input('name'), 'status' => 'T']
         );
     }
     
@@ -61,7 +63,7 @@ class BrandController extends Controller
         $brand->save();
         
         return response()->json(
-            ['message' => 'Uspje分no ste azurirali brand id ' . $request->input('id'), 'status' => 'T']
+            ['message' => 'Uspješno ste azurirali brand id ' . $request->input('id'), 'status' => 'T']
         );
     }
 }

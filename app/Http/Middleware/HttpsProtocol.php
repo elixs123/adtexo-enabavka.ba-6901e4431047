@@ -19,6 +19,8 @@ class HttpsProtocol
      */
     public function handle($request, Closure $next)
     {
+        
+
         if (starts_with($request->header('host'), 'www.') && env('APP_ENV') === 'production')
         {
             $host = str_replace('www.', '', $request->header('host'));
@@ -38,6 +40,7 @@ class HttpsProtocol
 
             return redirect('/login');
         }
+
 
         return $next($request);
     }

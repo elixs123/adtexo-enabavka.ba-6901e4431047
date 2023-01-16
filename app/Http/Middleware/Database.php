@@ -23,7 +23,7 @@ class Database
     {
         switch($request->route('db')){
             case 'ba':
-                Config::set('database.default', 'mysql');
+                Config::set('database.default', 'mysql1');
             break;
             case 'rs':
                 Config::set('database.default', 'mysql2');
@@ -33,6 +33,8 @@ class Database
             break;
                 
         }
+
+        $request->route()->forgetParameter('db');
         DB::purge();
 
         return $next($request);

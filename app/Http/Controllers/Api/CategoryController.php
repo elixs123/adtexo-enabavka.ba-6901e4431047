@@ -3,13 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Category;
-use App\CategoryTranslation;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Category\StoreCategoryTranslationRequest;
-use App\Http\Resources\Category\CategoryResource as ModelResource;
-use App\Http\Resources\Category\CategoryCollection as ModelCollection;
-use App\Http\Requests\Category\StoreApiCategoryRequest;
-
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 /**
  * Class CategoryController
  *
@@ -17,156 +13,71 @@ use App\Http\Requests\Category\StoreApiCategoryRequest;
  */
 class CategoryController extends Controller
 {
-    /**
-     * @var \App\Category
-     */
-    private $category;
-    /**
-     * @var \App\CategoryTranslation
-     */
-    private $categoryTranslation;
-
-    /**
-     * CategoryController constructor.
-     *
-     * @param \App\Category $category
-     * @param \App\CategoryTranslation $categoryTranslation
-     */
-    public function __construct(Category $category, CategoryTranslation $categoryTranslation) {
-        $this->category = $category;
-        $this->categoryTranslation = $categoryTranslation;
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response|\Illuminate\View\View|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     * @throws \Throwable
-     */
     public function index()
     {
-        $categoryId = request('father_id', 1);
+        $categorys = Category::all();
 
-        $this->category->statusId = request('status');
-        $this->category->langId = request('lang_id', 'bs');
-
-        return $this->category->getCategoryTree($categoryId);
+        return $categorys;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param StoreApiCategoryRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
-     */
-    public function store(StoreApiCategoryRequest $request)
+    public function saveCategory(Request $request)
     {
-        // Get form data
-        $input = $request->all();
+        $request->validate([
+            'acClassif' => 'required:max:50',
+            'acName' => 'required:max:50',
+            'acType' => 'required:max:3',
+        ],[
+            'acClassif.required' => 'Polje klasifikacija je obavezno',
+            'acName.required' => 'Polje naziv je obavezno',
+            'acType.required' => 'Polje tip je obavezno'
+        ]);
 
-        $categoryInput = [
-            'father_id' => $input['father_id'],
-            'list_of_parents' => 1,
-            'priority' => $input['priority'],
-            'status' => $input['status']
-        ];
+        try{
 
-        $translationInput = [
-            'category_id' => null,
-            'lang_id' => $input['lang_id'],
-            'name' => $input['name'],
-            'description' =>  $input['description'] ?? null
-        ];
+        $category = new Category;
+        $category->acClassif = $request->input('acClassif');
+        $category->acName = $request->input('acName');
+        $category->acType = $request->input('acType');
 
-        // Save Category
-        $category = $this->category->add($categoryInput);
+        $category->save();
 
-        // Save Translation
-        $category->translations()->save(new CategoryTranslation($translationInput));
+        }catch(ModelNotFoundException $e){
+            return response()->json([
+                'message' => 'Greška prilikom dodavanja kategorije',
+                'status' => 'F' 
+            ]);
+        }
 
-        // Update slug and path, rebuild tree
-        $this->category->updateListOfParents($category);
-        $this->category->rebuildTree();
-
-        return $this->category->getCatInfo($category->id);
+        return response()->json([
+            'message' => 'Uspjesno ste dodali kategoriju ' . $request->input('acName'),
+            'status' => 'T' 
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param StoreApiCategoryRequest $request
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(StoreApiCategoryRequest $request, $id)
-    {
-        // Get form data
-        $input = $request->all();
+    public function updateCategory($id, Request $request){
+        $request->validate([
+            'acName' => 'required:max:50',
+        ],[
+            'acName.required' => 'Polje naziv je obavezno',
+        ]);
 
-        $categoryInput = [
-            'father_id' => $input['father_id'],
-            'list_of_parents' => 1,
-            'priority' => $input['priority'],
-            'status' => $input['status']
-        ];
+        try{
+            $category = Category::find($id);
+            $category->acName = $request->input('acName');
 
-        $translationInput = [
-            'category_id' => $id,
-            'lang_id' => $input['lang_id'],
-            'name' => $input['name'],
-            'description' =>  $input['description'] ?? null,
-        ];
-
-        $category = $this->category->edit($id, $categoryInput);
-
-        $this->categoryTranslation->editTranslation($translationInput);
-
-        $this->category->updateListOfParents($category);
-
-        $this->category->rebuildTree();
-
-        $this->category->langId = $input['lang_id'];
-
-        return $this->category->getCatInfo($category->id);
-    }
-
-    /**
-     * Handle a POST request to translate.
-     *
-     * @param \App\Http\Request\Category\StoreCategoryTranslationRequest $request
-     * @param int $categoryId
-     *
-     * @return Response
-     */
-    public function translate(StoreCategoryTranslationRequest $request, $categoryId)
-    {
-        $input = $request->all();
-
-        $data = [
-            'category_id' => $categoryId,
-            'lang_id' => $input['lang_id'],
-            'name' => $input['name'],
-            'description' =>  $input['description'] ?? null,
-        ];
-
-        $this->categoryTranslation->add($data);
-
-        $this->category->rebuildTree();
-
-        $this->category->langId = $input['lang_id'];
-        return $this->category->getCatInfo($categoryId);
-
-    }
-
-    /**
-     * @param int $id
-     * @return \App\Http\Resources\Client\ClientResource
-     */
-    public function show($id)
-    {
-        $this->category->langId = request('lang_id', 'bs');
-
-        return $this->category->getCatInfo($id);
+            $category->save();
+        }
+        catch(ModelNotFoundException $e)
+        {
+            return response()->json([
+                'message' => 'Greška prilikom izmjene kategorije ' . $id,
+                'status' => 'F' 
+            ]);
+        }
+        
+        return response()->json([
+            'message' => 'Uspjesno ste izmjenili kategoriju id ' . $id,
+            'status' => 'T' 
+        ]);
     }
 }

@@ -13,6 +13,7 @@ return [
     'data' => [
         'name' => 'Naziv',
         'description' => 'Opis',
+        'acClassif' => 'Klasifikacija',
         'priority' => 'Redoslijed',
         'parent' => 'Roditelj',
     ],

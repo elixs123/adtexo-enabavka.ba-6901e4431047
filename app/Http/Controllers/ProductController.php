@@ -92,48 +92,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $langId = request()->get('lang_id', config('app.locale'));
-        $statusId = request()->get('status');
-        $brandId = request()->get('brand_id');
-        $stockId = request()->get('stock_id');
-        $categoryId = request()->get('category_id');
-        $keywords = request()->get('keywords');
-        $export = request()->get('export', false);
-
-        $this->category->langId = $langId;
-        $categories = $this->category->getCategoryTree();
-
-        $brands = $this->brand->getAll();
-        $stocks = $this->stock->getAll();
-
-        $this->product->keywords = $keywords;
-        $this->product->langId = $langId;
-        $this->product->statusId = $statusId;
-        $this->product->f_category_id = $categoryId > 0 ? $this->category->getCategoryTreeIds($categoryId) : null;
-        $this->product->brandId = $brandId;
-        $this->product->stockId = $stockId;
-        $this->product->limit = $export != false ? null : 25;
-        $this->product->paginate = $export != false ? false : true;
-		    
-        if ($export != false) {
-            $this->product->relation(['rProductQuantities', 'rProductPrices', 'rFatherCategory', 'rFatherCategory.rCategory']);
-        } else {
-            $this->product->relation(['rProductQuantities', 'rFatherCategory', 'rFatherCategory.rCategory'], true);
-        }
-		      
-        $items = $this->product->getAll();
-        if($export == 'pdf') {
-            return $this->exportToPDF($items, $stocks);
-        } else if($export == 'xls') {
-            return $this->exportToExcel($items, $stockId);
-        }
+        $items = Product::all();
 
         return view('product.index', array(
-            'categories' => $categories,
-            'stocks' => $stocks,
-            'brands' => $brands,
-            'items' => $items,
-            'lang_id' => $langId
+            'items' => $items
         ));
     }
 

@@ -9,6 +9,8 @@ class Brand extends BaseModel
 
     protected $guarded = [];
 
+    protected $table = 'tHE_SetitemBrands';
+
     public function products()
     {
         return $this->hasMany('App\Product');

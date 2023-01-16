@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Client;
 use App\Http\Requests\Client\StoreClientRequest;
 use App\Http\Requests\Client\UpdateClientRequest;
-use App\Person;
+use App\Subject;
 use App\PhotoHelper;
 use App\ProductCategory as Category;
 use App\Route;
@@ -49,13 +49,8 @@ class ClientController extends Controller
      * @param \App\ProductCategory $category
      * @param \App\Person $person
      */
-    public function __construct(Client $client, Route $route, Category $category, Person $person)
+    public function __construct()
     {
-        $this->client = $client;
-        $this->route = $route;
-        $this->category = $category;
-        $this->person = $person;
-        
         $this->middleware('auth');
         $this->middleware('acl:view-client', ['only' => ['index']]);
         $this->middleware('acl:create-client', ['only' => ['create', 'store']]);
@@ -70,78 +65,10 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $parent_id = request('parent_id');
-        $keywords = request()->get('keywords');
-        $countryId = request()->get('country_id');
-        $export = request()->get('export', false);
-        
-        if ($export != false) {
-            $this->client->relation([
-                'rType',
-                'rStatus',
-                'rCountry',
-                'rLocationType',
-                'rCategory',
-                'rPaymentTherms',
-                'rPaymentPeriod',
-                'rPaymentType',
-                'rStock',
-                'rSalesmanPerson',
-                'rResponsiblePerson',
-                'rPaymentPerson',
-                'rSupervisorPerson',
-                'rRoutes',
-            ]);
-        } else {
-            $this->client->relation([
-                'rType',
-                'rStatus',
-                'rResponsiblePerson',
-            ]);
-        }
-    
-        if (userIsAdmin()) {
-            $person_id = request('person_id');
-            
-            $this->client->personType = request('person_type');
-            $this->client->personId = $person_id;
-            
-            $person = is_null($person_id) ? null : $this->person->getOne($person_id);
-        } else {
-            $person = null;
-        }
-        
-        $this->client->parentId = $parent_id ? $parent_id : null;
-        $this->client->keywords = $keywords;
-        $this->client->countryId = $countryId;
-        $this->client->typeId = request('type_id');
-        $this->client->paymentTypeId = request('payment_type');
-        $this->client->onlyLocations = userIsSalesman();
-        $this->client->includeIds = (userIsSalesman()) ? $this->getUser()->rPerson->rClients->pluck('id')->unique()->all() : null;
-        $this->client->statusId = (userIsSalesman()) ? ['active', 'pending'] : request('status');
-        $this->client->limit = ($export != false) ? null : 25;
-        $this->client->paginate = ($export != false) ? false : true;
-        if (userIsFocuser()) {
-            $this->client->personType = 'salesman_person';
-            $this->client->personId = $this->getUser()->rPerson->id;
-        }
-        
-        $items = $this->client->getAll();
-    
-        if ($export == 'xls') {
-            return $this->exportToExcel($items, request('type_id'));
-        }
-        
-        $types = $this->client->getTypes();
-        
-        $parent = is_null($parent_id) ? null : $this->client->getOne($parent_id);
-        
+       $items = Subject::all();
+
         return view('client.index')->with([
-            'items' => $items,
-            'types' => $types,
-            'parent_id' => $this->client->parentId,
-            'parent' => $parent,
-            'person' => $person,
+            'items' => $items
         ]);
     }
     

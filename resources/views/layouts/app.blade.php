@@ -56,7 +56,20 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                         </div>
                         <ul class="nav navbar-nav float-right">
                             <!-- start: language -->
-                            
+                            <li class="dropdown dropdown-language nav-item">
+                                <a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    @if(session('db_name') == 'ba')
+                                    <i class="flag-icon flag-icon-ba"></i>
+                                        <span class="menu-title">Bosna i Hercegovina</span>
+                                    @elseif(session('db_name') == 'rs')
+                                    <i class="flag-icon flag-icon-rs"></i>
+                                        <span class="menu-title">Srbija</span>
+                                    @else
+                                    <i class="flag-icon flag-icon-hr"></i>
+                                        <span class="menu-title">Hrvatska</span>
+                                    @endif
+                                </a>
+                            </li>
                             <!-- end: language -->
                             <!-- start: full screen -->
                             <li class="dropdown dropdown-shortcuts nav-item">
@@ -145,7 +158,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                             <li class="dropdown dropdown-user nav-item">
                                 <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
                                     <div class="user-nav d-sm-flex d-none">
-                                        <span class="user-name text-bold-600">{{ is_null(auth()->user()->rPerson) ? auth()->user()->email : auth()->user()->rPerson->name }}</span>
+                                        <span class="user-name text-bold-600">{{ Auth::user()->email}}</span>
                                         <span class="user-status">{{ implode(', ', auth()->user()->roles->pluck('name')->toArray()) }}</span>
                                     </div>
                                     <span><img class="round" src="@if(auth()->user()->photo != ''){{ asset('assets/pictures/user/small_' . auth()->user()->photo) }}@else{{ asset('assets/img/no_photo.jpg') }}@endif" alt="avatar" height="40" width="40"></span>
@@ -186,23 +199,6 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
             <div class="shadow-bottom"></div>
             <div class="main-menu-content">
                 <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-                    <li class="nav-item">
-                        <a href="#">
-                           
-                           
-                            @if(session('db_name') == 'ba')
-                            <i class="flag-icon flag-icon-ba"></i>
-                                <span class="menu-title">Bosna i Hercegovina</span>
-                            @elseif(session('db_name') == 'sr')
-                            <i class="flag-icon flag-icon-rs"></i>
-                                <span class="menu-title">Srbija</span>
-                            @else
-                            <i class="flag-icon flag-icon-hr"></i>
-                                <span class="menu-title">Hrvatska</span>
-                            @endif
-                        </a>
-                    </li>
-                    <hr>
                     <li class="nav-item @if(request()->is('/')){{ 'active' }}@endif">
                         <a href="{{ route('dashboard') }}">
                             <i class="feather icon-home"></i>

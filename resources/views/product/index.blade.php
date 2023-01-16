@@ -42,51 +42,12 @@
         <div class="row">
             <div class="col-12">
                 <!-- start: filters -->
-                <div id="collapse-filters" class="filters collapse @if($filters){{ 'show' }}@endif">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">{{ trans('skeleton.actions.filters') }}</h4>
-                            <a href="javascript:" class="pull-right" data-toggle="collapse" data-target="#collapse-filters" aria-expanded="{{ $filters ? 'true' : 'false' }}"><i class="feather icon-x"></i></a>
-                        </div>
-                        <div class="card-content">
-                            <div class="card-body">
-                                {!! Form::open(['url' => request()->url(), 'method' => 'get', 'files' => false, 'autocomplete' => 'off', 'class' => 'validate filters-form']) !!}
-                                <input type="hidden" name="filters" value="{{ request('filters', 1) }}">
-                                <div class="row">
-                                    <div class="col-12">
-                                        {!! VuexyAdmin::text('keywords', request('keywords'), ['maxlength' => 100, 'placeholder' => 'Upišite naziv'], trans('skeleton.actions.search')) !!}
-                                    </div>
-                                    <div class="col-12 col-sm-3 col-lg-2">
-                                        {!! VuexyAdmin::selectTwo('lang_id', config('app.locales'), request('lang_id'), ['data-plugin-options' => '', 'id' => 'filters-lang_id'], trans('skeleton.lang')) !!}
-                                    </div>
-                                    <div class="col-12 col-sm-3 col-lg-2">
-                                        {!! VuexyAdmin::selectTwo('category_id', $categories->pluck('name_length', 'id')->prepend('All', '')->toArray(), request('category_id'), ['data-plugin-options' => '', 'id' => 'filters-category_id'], trans('product.data.category')) !!}
-                                    </div>
-                                    <div class="col-12 col-sm-3 col-lg-2">
-                                        {!! VuexyAdmin::selectTwo('brand_id', $brands->pluck('name', 'id')->prepend('All', '')->toArray(), request('brand_id'), ['data-plugin-options' => '', 'id' => 'filters-brand_id'], trans('product.data.brand')) !!}
-                                    </div>
-                                    <div class="col-12 col-sm-3 col-lg-2">
-                                        {!! VuexyAdmin::selectTwo('stock_id', $stocks->pluck('name', 'id')->prepend('All', '')->toArray(), request('stock_id'), ['data-plugin-options' => '', 'id' => 'filters-stock_id'], trans('product.data.stock')) !!}
-                                    </div>
-                                    <div class="col-12 col-sm-3 col-lg-2">
-                                        {!! VuexyAdmin::selectTwo('status', get_codebook_opts('status')->pluck('name', 'code')->prepend('All', '')->toArray(), request('status'), ['data-plugin-options' => '', 'id' => 'filters-status'], trans('skeleton.data.status')) !!}
-                                    </div>
-                                    <div class="col-12 col-sm-3 col-lg-2">
-                                        <div class="form-group">
-                                            <button class="btn btn-info" type="submit"><i class="feather icon-search"></i> {{ trans('skeleton.actions.search') }}</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                {!! Form::close() !!}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
                 <!-- end: filters -->
                 <!-- start: items -->
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">{{ $title }} <span class="badge badge-primary" data-row-count>{{ $items->total() }}</span></h4>
+                        <h4 class="card-title">{{ $title }} <span class="badge badge-primary" data-row-count>0</span></h4>
                         <a data-action="expand" class="pull-right"><i class="feather icon-maximize"></i></a>
                     </div>
                     <div class="card-content">
@@ -95,32 +56,54 @@
                                     <table class="table table-hover data-thumb-view">
                                         <thead class="thead-light">
                                             <tr>
-                                                <th style="width: 60px">{{ trans('product.data.photo') }}</th>
-                                                <th style="width: 50px">{{ trans('product.data.code') }}</th>
-                                                <th>{{ trans('product.data.name') }}</th>
-                                                <th style="width: 150px">{{ trans('product.data.category') }}</th>
-                                                <th style="width: 50px">{{ trans('skeleton.data.status') }}</th>
-												 <th style="width: 50px">{{ trans('product.data.qty') }}</th>
-                                                <th style="width: 100px" class="text-right">{{ trans('skeleton.data.actions') }}</th>
+                                                <th>Sifra</th>
+                                                <th>Naziv</th>
+                                                <th>Primarna klasifikacija</th>
+                                                <th>Sekundarna klasifikacija</th>
+                                                <th>Barcode</th>
+                                                <th>Valuta</th>
+                                                <th>MPC</th>
+                                                <th>Osnovica</th>
+                                                <th>VPC</th>
+                                                <th>Zadnja nabavna cijena</th>
+                                                <th>Fakturna cijena</th>
+                                                <th>Valuta dobavljaca</th>
+                                                <th>J.MJ.</th>
+                                                <th>Iznos PDV-A</th>
+                                                <th>PDV stopa</th>
+                                                <th>Aktivan</th>
                                             </tr>
                                         </thead>
                                         <tbody data-ajax-form-body="products">
                                         @foreach($items as $id => $item)
-                                        @include('product._row', ['source' => 'products'])
+                                        <tr>
+                                            <td>{{ $item->acIdent }}</td>
+                                            <td>{{ $item->acName }}</td>
+                                            <td>{{ $item->acClassif }}</td>
+                                            <td>{{ $item->acClassif2 }}</td>
+                                            <td>{{ $item->acCode }}</td>
+                                            <td>{{ $item->acCurrency }}</td>
+                                            <td>{{ $item->anSalePrice }}</td>
+                                            <td>{{ $item->anRTPrice }}</td>
+                                            <td>{{ $item->anWSPrice }}</td>
+                                            <td>{{ $item->anBuyPrice }}</td>
+                                            <td>{{ $item->anPriceSupp }}</td>
+                                            <td>{{ $item->acPurchCurr }}</td>
+                                            <td>{{ $item->acUM }}</td>
+                                            <td>{{ $item->anVAT }}</td>
+                                            <td>{{ $item->acVATCode }}</td>
+                                            <td>{{ $item->acActive }}</td>
+                                        </tr>
+
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="no-results @if($items->total() == 0){{ 'show' }}@endif" data-no-results>
+                            <div class="no-results" data-no-results>
                                 <h5>{{ trans('skeleton.no_results') }}</h5>
                             </div>
                         </div>
                     </div>
-                    @if($items->total())
-                    <div class="card-footer">
-                        {!! $items->appends(request()->query())->render() !!}
-                    </div>
-                    @endif
                 </div>
                 <!-- end: items -->
             </div>

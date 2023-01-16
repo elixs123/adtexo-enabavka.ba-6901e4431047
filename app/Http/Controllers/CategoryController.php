@@ -56,7 +56,7 @@ class CategoryController extends Controller
 
         $this->category->langId = $langId;
         $this->category->statusId = $statusId;
-        $items = $this->category->relation(['rStatus'])->getCategoryTree();
+        $items = $this->category::all();
         
         return view('category.index', array(
             'items' => $items,

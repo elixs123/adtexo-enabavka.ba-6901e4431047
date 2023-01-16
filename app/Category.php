@@ -15,7 +15,10 @@ class Category extends BaseModel {
      *
      * @var string
      */
-    protected $table = 'categories';
+    protected $table = 'tHE_SetItemCateg';
+    protected $primaryKey = 'anQid';
+
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -23,11 +26,6 @@ class Category extends BaseModel {
      * @var array
      */
     protected $fillable = [
-        'father_id',
-        'list_of_parents',
-        'status',
-        'photo',
-        'priority'
     ];
     
     /**

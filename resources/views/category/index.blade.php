@@ -37,37 +37,7 @@
     <!-- start: content body -->
     <div class="content-body">
         <div class="row">
-            <div class="col-12">
-                <!-- start: filters -->
-                <div id="collapse-filters" class="filters collapse @if($filters){{ 'show' }}@endif">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">{{ trans('skeleton.actions.filters') }}</h4>
-                            <a href="javascript:" class="pull-right" data-toggle="collapse" data-target="#collapse-filters" aria-expanded="{{ $filters ? 'true' : 'false' }}"><i class="feather icon-x"></i></a>
-                        </div>
-                        <div class="card-content">
-                            <div class="card-body">
-                                {!! Form::open(['url' => request()->url(), 'method' => 'get', 'files' => false, 'autocomplete' => 'off', 'class' => 'validate filters-form']) !!}
-                                <input type="hidden" name="filters" value="{{ request('filters', 1) }}">
-                                <div class="row">
-                                    <div class="col-12 col-sm-4 col-lg-3">
-                                        {!! VuexyAdmin::selectTwo('lang_id', config('app.locales'), request('lang_id'), ['data-plugin-options' => '', 'id' => 'filters-lang_id'], trans('skeleton.lang')) !!}
-                                    </div>
-                                    <div class="col-12 col-sm-4 col-lg-3">
-                                        {!! VuexyAdmin::selectTwo('status', get_codebook_opts('status')->pluck('name', 'code')->prepend('All', '')->toArray(), request('status'), ['data-plugin-options' => '', 'id' => 'filters-status'], trans('skeleton.data.status')) !!}
-                                    </div>
-                                    <div class="col-12 col-sm-4 col-lg-3">
-                                        <div class="form-group">
-                                            <button class="btn btn-info" type="submit"><i class="feather icon-search"></i> {{ trans('skeleton.actions.search') }}</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                {!! Form::close() !!}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end: filters -->                
+            <div class="col-12">         
                 <!-- start: items -->
                 <div class="card">
                     <div class="card-header">
@@ -80,15 +50,13 @@
                                 <table class="table table-hover mb-0">
                                     <thead class="thead-light">
                                         <tr>
+                                            <th>{{ trans('category.data.acClassif') }}</th>
                                             <th>{{ trans('category.data.name') }}</th>
                                             <th>{{ trans('skeleton.data.status') }}</th>
-                                            @can('edit-category')
-                                            <th class="text-right">{{ trans('skeleton.data.actions') }}</th>
-                                            @endcan
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($items as $id => $item)
+                                        @foreach($items as $item)
                                             @include('category._row')
                                         @endforeach
                                     </tbody>

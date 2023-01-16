@@ -23,11 +23,6 @@ Route::group(['namespace' => 'Api', 'prefix' => '{db}', 'middleware' => 'auth:ap
         'index', 'show', 'store', 'update'
     ])->parameters(['clients' => 'id']);
 
-    // Products
-    Route::post('/products/sync-prices', 'ProductController@syncPrices');
-    Route::resource('products', ProductController::class)->only([
-        'show', 'store'
-    ]);
 
 
     // Brands
@@ -43,10 +38,19 @@ Route::group(['namespace' => 'Api', 'prefix' => '{db}', 'middleware' => 'auth:ap
     Route::post('brands/update/{id}', 'BrandController@updateBrand');
 
     // Categories
-    Route::post('categories/{id}/translate', 'CategoryController@translate');
-    Route::resource('categories', CategoryController::class)->only([
-        'show', 'store', 'update', 'index'
-    ]);
+    Route::get('categories', 'CategoryController@index');
+    Route::post('categories/insert', 'CategoryController@saveCategory');
+    Route::post('categories/update/{id}', 'CategoryController@updateCategory');
+
+    //Products
+    Route::get('products', 'ProductController@index');
+    Route::post('products/insert', 'ProductController@insertProduct');
+    Route::post('products/update/{id}', 'ProductController@updateProduct');
+
+    //Subjects
+    Route::get('subjects', 'SubjectController@index');
+    Route::post('subjects/insert', 'SubjectController@saveSubject');
+    Route::post('subjects/update/{id}', 'SubjectController@updateSubject');
 
     // Stocks
     Route::post('/stocks/product/stock', 'StockController@productStock');
