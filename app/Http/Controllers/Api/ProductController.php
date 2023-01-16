@@ -31,7 +31,6 @@ class ProductController extends Controller
 
     public function insertProduct(Request $request){
         $request->validate([
-            'anQid' => 'required',
             'acIdent' => 'required',
             'acName' => 'required',
             'acClassif' => 'required',
