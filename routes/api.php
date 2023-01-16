@@ -59,10 +59,6 @@ Route::group(['namespace' => 'Api', 'prefix' => '{db}', 'middleware' => 'auth:ap
         'show', 'store', 'index'
     ]);
 
-    // Logs
-	Route::resource('logs', LogController::class)->only([
-		'index', 'show', 'store'
-	]);
     
     // Persons
     Route::resource('persons', PersonController::class)->except([

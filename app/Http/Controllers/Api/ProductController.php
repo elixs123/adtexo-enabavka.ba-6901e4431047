@@ -40,7 +40,6 @@ class ProductController extends Controller
             'anSalePrice' => 'required',
             'anRTPrice' => 'required',
             'anWSPrice' => 'required',
-            'anWSPrice2' => 'required',
             'anBuyPrice' => 'required',
             'anPriceSupp' => 'required',
             'acPurchCurr' => 'required',
