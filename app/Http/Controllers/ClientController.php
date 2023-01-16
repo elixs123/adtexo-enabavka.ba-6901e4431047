@@ -65,7 +65,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-       $items = Subject::all();
+       $items = Subject::paginate(10);
 
         return view('client.index')->with([
             'items' => $items

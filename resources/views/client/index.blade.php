@@ -45,6 +45,9 @@
                             </div>
                             
                         </div>
+                        <div class="card-footer">
+                            {!! $items->appends(request()->query())->render() !!}
+                        </div>
                     </div>
                 </div>
                 <!-- end: items -->
