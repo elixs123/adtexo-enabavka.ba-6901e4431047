@@ -9,6 +9,7 @@ use App\Subject;
 use App\PhotoHelper;
 use App\ProductCategory as Category;
 use App\Route;
+use Illuminate\Http\Request;
 use App\Support\Controller\ClientHelper;
 use App\User;
 
@@ -63,8 +64,20 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if($request->has('search')){
+            $request->validate([
+                'search' => 'required:max:20'
+            ]);
+
+            $items = Subject::where('acSubject', $request->input('search'))->get();
+
+            return view('client.index')->with([
+                'items' => $items
+            ]);
+        }
+
        $items = Subject::paginate(10);
 
         return view('client.index')->with([
@@ -336,7 +349,18 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function search()
+
+    public function search(Request $request){
+        $search = $request->input('search');
+
+        $data = Subject::where('acSubject', 'like', '%'.$search.'%')
+                ->orWhere('acName2', 'like', '%'.$search.'%')
+                ->orWhere('acCode', 'like', '%'.$search.'%')
+                ->get();
+
+        return $data;
+    }
+    public function oLDsearch()
     {
         $exclude = explode('.', request('e', ''));
         

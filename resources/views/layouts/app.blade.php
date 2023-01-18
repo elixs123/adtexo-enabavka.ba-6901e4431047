@@ -20,6 +20,8 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
         <link href="{{ asset('assets/theme/vendors/css/vendors.min.css').assetVersion() }}" rel="stylesheet" type="text/css">
         @yield('css-vendor')
         <link href="{{ asset('assets/theme/css/app.min.css').assetVersion() }}" rel="stylesheet" type="text/css">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
         @yield('css')
         @include('partials.pusher')
     </head>
@@ -73,26 +75,20 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                             <!-- end: language -->
                             <!-- start: full screen -->
                             <li class="dropdown dropdown-shortcuts nav-item">
-                                @if(can('create-document') && !ScopedDocument::exist() && userIsClient())
-                                <a class="btn btn-primary btn-document" href="{{ route('document.create', ['type_id' => 'order']) }}" data-toggle="modal" data-target="#form-modal1"><i class="feather icon-file"></i> <span class="d-none d-md-inline">{{ trans('document.actions.new.order') }}</span></a>
-                                @else
+                                
                                 <a class="dropdown-toggle nav-link" id="dropdown-shortcuts" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="feather icon-plus"></i>
                                 </a>
+
+                                
+
+
                                 <div class="dropdown-menu" aria-labelledby="dropdown-shortcuts">
-                                    @if(can('create-document') && !ScopedDocument::exist())
-                                        @foreach(trans('document.actions.new') as $key => $value)
-                                    <a class="dropdown-item" href="{{ route('document.create', ['type_id' => $key]) }}" data-toggle="modal" data-target="#form-modal1"><i class="feather icon-file"></i> {{ $value }}</a>
-                                        @endforeach
-                                    @endif
-                                    @can('create-client')
-                                    <a class="dropdown-item" href="{{ route('client.create', ['callback' => 'documentReload']) }}" data-toggle="modal" data-target="#form-modal1"><i class="feather icon-briefcase"></i> {{ trans('client.actions.new') }}</a>
-                                    @endcan
-                                    @can('edit-person')
-                                    <a class="dropdown-item" href="{{ route('person.create', ['callback' => 'documentReload']) }}" data-toggle="modal" data-target="#form-modal1"><i class="feather icon-users"></i> {{ trans('person.actions.new') }}</a>
-                                    @endcan
+                                    <a class="dropdown-item"  type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"><i class="feather icon-file"></i> Nova narudžba</a>
+                                        
                                 </div>
-                                @endif
+
+                                
                             </li>
                             <!-- end: full screen -->
                             @if(false)
@@ -185,6 +181,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
             </div>
         </nav>
         <!-- end: header -->
+        
         <!-- start: main menu -->
         <div class="main-menu menu-fixed menu-dark menu-accordion menu-shadow" data-scroll-to-active="true">
             <div class="navbar-header">
@@ -400,6 +397,30 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
             <div class="content-overlay"></div>
             <div class="header-navbar-shadow"></div>
             <div class="content-wrapper">
+                <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Subjekti</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text"  name="searh" class="searchSubject form-control" placeholder="Upisite subjekta">
+
+                    <div class="search-result-subject" style="overflow: scroll;display:none;">
+                        
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!--END MODAL -->
                 @if($scoped_header)
                 <div class="alert alert-info d-lg-none d-xl-none">
                     <a href="{{ route('document.show', [ScopedDocument::id()]) }}" title="{{ trans('document.actions.show') }}" data-toggle="tooltip">
@@ -433,6 +454,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
         <div id="loader"><div class="loading">loading ...</div></div>
         <!-- end: loader -->
         <!-- start: scripts -->
+
         <script src="{{ asset('assets/theme/vendors/js/vendors.min.js').assetVersion() }}" type="text/javascript"></script>
         @yield('script-vendor')
         <script src="{{ asset('assets/theme/js/app.min.js').assetVersion() }}" type="text/javascript"></script>
@@ -452,6 +474,43 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                 });
             }
         </script>
+
+<script>
+    $(document).ready(function(){
+        $(".searchSubject").keyup(function(){
+
+            if(this.value.length < 1){
+                $(".search-result-subject").hide()
+                $(".appended-search-subject").remove()
+                return false
+            }
+
+            $(".search-result-subject").hide()
+            $(".appended-search-subject").remove()
+            $.ajax({
+                type: "GET",
+                url: "api/ba/subjects/search",
+                data:{
+                    search: this.value
+                },
+                success: function(res){
+                    $(".appended-search-subject").remove()
+                    $(".search-result-subject").css('height', '250px')
+                    $(".search-result-subject").css('display', 'grid')
+
+                    if(res.length > 0){
+                        for(var x = 0;x < res.length;x++){
+                            $(".search-result-subject").append("<a href='createorder?acSubject="+res[x].acSubject+"' class='border appended-search-subject p1 cursor-pointer' style='color: black !important;padding:5px;'>"+res[x].acName2 + '||' +res[x].acAddress +"</a>")
+                        }
+                    }
+                },
+                error:function(error)
+                {
+                }
+            });
+        })
+    });
+</script>
         @include('partials.firebase')
         <!-- end: scripts -->
     </body>

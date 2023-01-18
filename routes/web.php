@@ -55,6 +55,13 @@ Route::group(['middleware' => ['auth', 'acl', 'emptystringstonull', 'user.person
     */
     Route::get('/', 'HomeController@index')->name('dashboard');
 
+    /**
+     * 
+     * Pantheon
+     */
+
+    Route::get('/createorder', 'PantheonController@index')->name('createorder');
+    Route::post('/createorder', 'PantheonController@insert');
     /*
     |--------------------------------------------------------------------------
     | Invoicing Routes

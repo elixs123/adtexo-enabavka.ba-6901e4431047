@@ -32,6 +32,7 @@ class SubjectController extends Controller
             'acSubject' => 'required:max:50',
             'acName2' => 'required:max:50',
             'acAddress' => 'required:max:3',
+            'acPayer' => 'required:max:3',
         ],[
             'acSubject.required' => 'Polje Sujekat je obavezno',
             'acName2.required' => 'Polje naziv je obavezno',
@@ -73,5 +74,21 @@ class SubjectController extends Controller
             'message' => 'Uspješno ste izmjenili subjekta',
             'status' => 'T' 
         ]);
+    }
+
+    public function search(Request $request){
+        $request->validate([
+            'search' => 'required'
+        ]);
+        //sifri subjekta, nazivu accode
+
+        $search = $request->input('search');
+
+        $data = Subject::where('acSubject', 'like', '%'.$search.'%')
+                ->orWhere('acName2', 'like', '%'.$search.'%')
+                ->orWhere('acCode', 'like', '%'.$search.'%')
+                ->get();
+
+        return $data;
     }
 }

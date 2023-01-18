@@ -13,6 +13,13 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::group(['namespace' => 'Api', 'prefix' => '{db}'], function () {
+    Route::get('subjects/search', 'SubjectController@search');
+    Route::get('projects/search', 'ProductController@search');
+    Route::get('projects/search/rabat', 'ProductController@searchRabat');
+});
+
+
 Route::group(['namespace' => 'Api', 'prefix' => '{db}', 'middleware' => 'auth:api'], function () {
     // Documents
 	Route::get('/documents', 'DocumentController@index');
@@ -26,11 +33,6 @@ Route::group(['namespace' => 'Api', 'prefix' => '{db}', 'middleware' => 'auth:ap
 
 
     // Brands
-    /*Route::resource('brands', BrandController::class)->only([
-        'show', 'store', 'index'
-    ]);*/
-    
-    
     Route::get('brands', 'BrandController@getAll');
     Route::get('brands/{id}', 'BrandController@getOne');
     

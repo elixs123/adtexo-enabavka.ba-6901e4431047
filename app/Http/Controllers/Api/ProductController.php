@@ -6,6 +6,8 @@ use App\Product;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Subject;
+use App\The_SetSubjPriceItem;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -86,5 +88,19 @@ class ProductController extends Controller
             'status' => 'T' 
         ]);
 
+    }
+
+    public function search(Request $request){
+        $data['products'] = Product::where($request->input('searchName'), 'like', '%' . $request->input('search') . '%')->get();
+        $data['acSubject'] = Subject::where('acSubject', $request->input('acSubject'))->get();
+        return $data;
+    }
+
+    public function searchRabat(Request $request){
+        $data['priceItem'] = The_SetSubjPriceItem::where('acSubject', $request->input('acSubject'))
+                                                    ->where('acIdent', $request->input('acIdent'))
+                                                    ->get();
+
+        return $data;
     }
 }
