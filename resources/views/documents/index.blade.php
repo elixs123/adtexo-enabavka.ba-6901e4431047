@@ -143,11 +143,11 @@
                                         </div>
                                         <div class="form-group col-md-1">
                                             <label for="anQty">MPC</label>
-                                            <input type="decimal" class="form-control anSalePrice" name="anSalePrice"  id="anSalePrice"  placeholder="MPC" style="pointer-events:none;background:#ddd;">
+                                            <input type="decimal" class="form-control anRTPrice" name="anRTPrice"  id="anRTPrice"  placeholder="MPC" style="pointer-events:none;background:#ddd;">
                                         </div>
                                         <div class="form-group col-md-1">
                                             <label for="anQty">VPC</label>
-                                            <input type="decimal" class="form-control anWSPrice" name="anWSPrice"  id="anWSPrice"  placeholder="VPC" style="pointer-events:none;background:#ddd;">
+                                            <input type="decimal" class="form-control anWSPrice2" name="anWSPrice2"  id="anWSPrice2"  placeholder="VPC" style="pointer-events:none;background:#ddd;">
                                         </div>
                                         <div class="form-group col-md-1">
                                             <label for="anQty">Količina</label>
@@ -264,7 +264,7 @@
                         $(".search-result").show()
 
                         for(var x = 0;x < res['products'].length;x++){
-                            $(".search-result").append("<p value="+res['products'][x].acIdent+" anSalePrice="+res['products'][x].anSalePrice+" anWSPrice="+res['products'][x].anWSPrice+" class='border appended-search p1 cursor-pointer' style='color: black !important;padding:5px;'>"+res['products'][x].acName +"</p>")
+                            $(".search-result").append("<p value="+res['products'][x].acIdent+" anRTPrice="+res['products'][x].anSalePrice+" anWSPrice2="+res['products'][x].anWSPrice+" class='border appended-search p1 cursor-pointer' style='color: black !important;padding:5px;'>"+res['products'][x].acName +"</p>")
                         }
                     }
                    $('.cursor-pointer').click(function(){
@@ -273,8 +273,8 @@
 
                     $('.acIdent').val($(this).attr('value'))
                     $('.acName').val($(this).html())
-                    $('.anSalePrice').val($(this).attr('anSalePrice'))
-                    $('.anWSPrice').val($(this).attr('anWSPrice'))
+                    $('.anRTPrice').val($(this).attr('anRTPrice'))
+                    $('.anWSPrice2').val($(this).attr('anWSPrice2'))
                     $('.anQty').val(anQty.toFixed(2))
                     $('.anRebate1').val(res['acSubject'][0]['anRebate'])
                     $('.anRebate2').val(anRebate2.toFixed(2))

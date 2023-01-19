@@ -99,23 +99,25 @@ class PantheonController extends Controller
     }
 
     public function insert(Request $request){
-        $pdv = (float) $request->input('anSalePrice') * 0.17;
 
-        $rebate1 = ((float) $request->input('anSalePrice') + $request->input('anQty')) / 1.17 - ((float) $request->input('anSalePrice') / 1.17 * ((float) $request->input('anRebate1') / 100));
-
-        $rebate2 = $rebate1 - ($rebate1 * ((float) $request->input('anRebate2') / 100));
-        $rebate3 = $rebate2 - ($rebate2 * ((float) $request->input('anRebate3') / 100));
-
-        $anForPay = $rebate3;
+       
 
         $order = new The_OrderItem;
         $order->acIdent = $request->input('acIdent');
 
         if($request->has('acWayOfSale') == 'Z'){
-            $order->anPrice = $request->input('anWSPrice');
+            $order->anPrice = $request->input('anWSPrice2');
+            $rebate1 = ((float) $request->input('anWSPrice2') * $request->input('anQty') / 1.17) - ((float) $request->input('anWSPrice2') * $request->input('anQty') / 1.17 * (float) $request->input('anRebate1') / 100);
         }else{
-            $order->anPrice = $request->input('anSalePrice');
+            $order->anPrice = $request->input('anRTPrice');
+            $rebate1 = ((float) $request->input('anRTPrice') * $request->input('anQty') / 1.17)  - ((float) $request->input('anRTPrice') * $request->input('anQty') / 1.17 *((float) $request->input('anRebate1') / 100));
         }
+
+
+        $rebate2 = $rebate1 - ($rebate1 * ((float) $request->input('anRebate2') / 100));
+        $rebate3 = $rebate2 - ($rebate2 * ((float) $request->input('anRebate3') / 100));
+
+        $anForPay = $rebate3;
         
         $order->anQty = $request->input('anQty');
         $order->anRebate1 = $request->input('anRebate1');
