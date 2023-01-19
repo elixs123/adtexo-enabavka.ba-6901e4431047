@@ -217,7 +217,7 @@
                                             </form>
                                                 @empty
                                                 <tr>
-                                                    <th colspan="6"><h3 class="text-center">Nema dodati artikala</h3></th>
+                                                    <th colspan="6"><h3 class="text-center">Nema dodatih artikala</h3></th>
                                                 </tr>
                                             
                                             @endforelse

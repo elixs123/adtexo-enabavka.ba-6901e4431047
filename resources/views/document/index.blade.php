@@ -64,7 +64,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <th colspan="6"><h3 class="text-center">Nema dodati narudjbi</h3></th>
+                        <th colspan="6"><h3 class="text-center">Nema dodatih narudžbi</h3></th>
                     </tr>
                     @endforelse
                 </tbody>
