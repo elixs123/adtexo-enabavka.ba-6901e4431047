@@ -37,8 +37,8 @@
                         <th scope="col">Platitelj</th>
                         <th scope="col">Status</th>
                         <th scope="col">Datum kreiranja</th>
-                        <th scope="col">Datum Vazenja</th>
-                        <th scope="col">Broj narudjbe</th>
+                        <th scope="col">Datum vazenja</th>
+                        <th scope="col">Broj naruđbe</th>
                         <th scope="col">Vrijednost</th>
                         <th scope="col">Iznos PDV-a</th>
                         <th scope="col">Ukupno sa PDV-om</th>
@@ -47,20 +47,20 @@
                 <tbody>
                     @forelse($orders as $key => $order)
                     <tr>
-                        <th scope="row">{{$key+1}}</th>
-                        <td>{{$order->subject->acName2}}</td>
-                        <td>{{$order->acPayerName}}</td>
+                        <th scope="row" class="text-right">{{$key+1}}</th>
+                        <td class="text-right">{{$order->subject->acName2}}</td>
+                        <td class="text-right">{{$order->acPayerName}}</td>
                         @if($order->acStatus == 'R')
-                            <td class="text-info">Rezervisano</td>
+                            <td class="text-info text-right">Rezervisano</td>
                         @elseif($order->acStatus == 'N')
-                            <td class="text-danger">Nepotvrdjeno</td>
+                            <td class="text-danger text-right">Nepotvrđeno</td>
                         @endif
-                        <td>{{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $order->adDate)->format('d.m.Y') }}</td>
-                        <td>{{ Carbon\Carbon::createFromFormat('Y-m-d', $order->anDaysForValid)->format('d.m.Y') }}</td>
-                        <td><a href="{{route('createorder', ['id' => $order->id])}}">{{$order->orderNumber}}</a></td>
-                        <td>{{round($order->anForPay / 1.17, 2)}} KM</td>
-                        <td>{{round($order->anForPay * 0.145292, 2)}} KM</td>
-                        <td>{{round($order->anForPay, 2)}} KM</td>
+                        <td class="text-right">{{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $order->adDate)->format('d.m.Y') }}</td>
+                        <td class="text-right">{{ Carbon\Carbon::createFromFormat('Y-m-d', $order->anDaysForValid)->format('d.m.Y') }}</td>
+                        <td class="text-right"><a href="{{route('createorder', ['id' => $order->id])}}">{{$order->orderNumber}}</a></td>
+                        <td class="text-right">{{round($order->anForPay / 1.17, 2)}} KM</td>
+                        <td class="text-right">{{round($order->anForPay * 0.145292, 2)}} KM</td>
+                        <td class="text-right">{{round($order->anForPay, 2)}} KM</td>
                     </tr>
                     @empty
                     <tr>

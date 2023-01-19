@@ -8,6 +8,7 @@ use App\The_Order;
 use App\Product;
 use App\Subject;
 use Carbon\Carbon;
+use DB;
 
 class PantheonController extends Controller
 {
@@ -60,6 +61,7 @@ class PantheonController extends Controller
     }
 
     public function update(Request $request){
+        
         if($request->has('acStatus')){
             $request->validate([
                 'orderNumber' => 'required:string:max:100'
@@ -79,13 +81,19 @@ class PantheonController extends Controller
         ]);
 
         
-       
         The_OrderItem::where('orderNumber', $request->input('orderNumber'))
                             ->where('anNo', $request->input('anNo'))
                             ->update([
                                 'anQty' => $request->input('anQty'),
                                 'anRebate2' => $request->input('anRebate2')
                             ]);
+
+        $sumAnForPay = The_OrderItem::where('orderNumber', $request->input('orderNumber'))->sum(DB::raw('anForPay * anQty'));
+
+
+        The_Order::where('orderNumber', $request->input('orderNumber'))->update([
+            'anForPay' => $sumAnForPay
+        ]);
         
         return redirect()->back();
     }

@@ -414,32 +414,34 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                     <div class="search-result-subject" style="overflow: scroll;display:none;">
                         
                     </div>
+                    @if(count(ScopedDocument::orders()) > 0) 
                     <hr>
-                    <h4 class="text-danger">Imate nepotvrdjene narudjbe</h4>
+                        <h4 class="text-danger">Imate nepotvrdjene naruđbe</h4>
                     <hr>
                     <table class="table">
-                        <thead>
-                            <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Kupac</th>
-                            <th scope="col">Platitelj</th>
-                            <th scope="col">Broj narudjbe</th>
-                            <th scope="col">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach(ScopedDocument::orders() as $key => $order)
-                            <tr>
-                                <th scope="row">{{$key+1}}</th>
-                                <td>{{$order->subject->acName2}}</td>
-                                <td>{{$order->acPayerName}}</td>
-                                <td><a href="{{route('createorder', ['id' => $order->id])}}">{{$order->orderNumber}}</a></td>
-                                <td class="text-danger">Nepotvrdjena</td>
-                            </tr>
-                            @endforeach
-                            
-                        </tbody>
-                        </table>
+                            <thead>
+                                <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Kupac</th>
+                                <th scope="col">Platitelj</th>
+                                <th scope="col">Broj naruđbe</th>
+                                <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(ScopedDocument::orders() as $key => $order)
+                                <tr>
+                                    <th scope="row" class="text-right">{{$key+1}}</th>
+                                    <td class="text-right">{{$order->subject->acName2}}</td>
+                                    <td class="text-right">{{$order->acPayerName}}</td>
+                                    <td class="text-right"><a href="{{route('createorder', ['id' => $order->id])}}">{{$order->orderNumber}}</a></td>
+                                    <td class="text-danger text-right">Nepotvrđena</td>
+                                </tr>
+                                @endforeach
+                                
+                            </tbody>
+                    </table>
+                    @endif
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>

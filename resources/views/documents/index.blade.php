@@ -97,7 +97,7 @@
                                                 <td><h4>{{$order->orderNumber}}</h4></td>
                                             </tr>
                                             <tr>
-                                                <th>Nepotvrdjeno</th>
+                                                <th>Nepotvrđeno</th>
                                             </tr>
                                             <tr>
                                                 <th><br></th>
@@ -191,12 +191,11 @@
                                             <th scope="col" class="text-center">Opcije</th>
                                         </tr>
                                     </thead>
-                                    <form action="" method="post">
-                                    {{ csrf_field() }}
-                                    {{ method_field('PUT') }}
-                                    
                                         <tbody>
                                             @forelse($orderItems as $x => $item )
+                                            <form action="" method="post">
+                                                {{ csrf_field() }}
+                                                {{ method_field('PUT') }}
                                                 <input type="hidden" name="orderNumber" value="{{$item->orderNumber}}">
                                                 <input type="hidden" name="anNo" value="{{$item->anNo}}">
                                                 <tr>
@@ -215,13 +214,15 @@
                                                     <th class="text-right">{{round(($item->anForPay * $item->anQty) * 1.17, 2)}}</th>
                                                     <th class="p-0"><button class="btn btn-success float-right" type="submit">Izmjeni</button></th>
                                                 </tr>
+                                            </form>
                                                 @empty
                                                 <tr>
                                                     <th colspan="6"><h3 class="text-center">Nema dodati artikala</h3></th>
                                                 </tr>
+                                            
                                             @endforelse
                                         </tbody>
-                                    </form>
+                                    
                                 </table>
                                 
                                
