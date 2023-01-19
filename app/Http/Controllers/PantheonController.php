@@ -11,37 +11,83 @@ use Carbon\Carbon;
 
 class PantheonController extends Controller
 {
-    public function index(Request $request){
+    public function index($id){
 
+        $order = The_Order::where('id', $id)->firstOrFail();
+
+        $orderItems = The_OrderItem::where('orderNumber', $order->orderNumber)->get();
+
+        $subject = Subject::where('acSubject', $order->acSubject)->first();
+
+        $acPayer = Subject::where('acSubject', $order->acPayer)->first();
+
+        return view('documents.index', ['order' => $order, 'orderItems' => $orderItems, 'subject' => $subject, 'acPayer' => $acPayer]);
+    }
+
+    public function createOrder(Request $request){
         $request->validate([
-            'acSubject' => 'required'
+            'acSubject' => 'required:max:20'
         ]);
 
         $order = The_Order::where('acSubject', $request->input('acSubject'))
-                        ->where('status', 'R')        
+                        ->where('acStatus', 'N')        
                         ->get();
 
         if($order->isEmpty()){
-            $this->createOrder($request->input('acSubject'));
 
-        $order = The_Order::where('acSubject', $request->input('acSubject'))
-                    ->where('status', 'R')        
-                    ->get();
+            $subject = Subject::where('acSubject', $request->input('acSubject'))->first();
+    
+            $acPayer = Subject::where('acSubject', $subject->acPayer)->first();
+
+
+            $order = new The_Order;
+            $order->acSubject = $subject->acSubject;
+            $order->acStatus = 'N';
+            $order->anDaysForValid = Carbon::now()->addDay(5);
+            $order->acPayer = $acPayer->acSubject;
+            $order->acPayerName = $acPayer->acName2;
+            $order->save();
+
+            $order->orderNumber = '#'.sprintf("%06d", $order->id).'/'.date('y');
+            $order->save();
+            
+
+            return redirect()->route('createorder', $order->id); 
         }
 
-        $orderItems = The_OrderItem::where('orderNumber', $order[0]->id)->get();
-        $subject = Subject::where('acSubject', $request->input('acSubject'))->first();
-
-        return view('documents.index', ['order' => $order, 'orderItems' => $orderItems, 'subject' => $subject]);
+        return redirect()->route('createorder', $order->id); 
+        
     }
 
-    private function createOrder($acSubject){
-        $order = new The_Order;
-        $order->acSubject = $acSubject;
-        $order->status = 'R';
-        $order->anDaysForValid = Carbon::now()->addDay(5);
+    public function update(Request $request){
+        if($request->has('acStatus')){
+            $request->validate([
+                'orderNumber' => 'required:string:max:100'
+            ]);
 
-        $order->save();
+            The_Order::where('orderNumber', $request->input('orderNumber'))
+                            ->update([
+                                'acStatus' => 'R'
+                            ]);
+                            
+            return redirect()->route('orders');
+        }
+        
+        $request->validate([
+            'orderNumber' => 'required:string:max:100',
+            'anNo' => 'required:int',
+        ]);
+
+        
+       
+        The_OrderItem::where('orderNumber', $request->input('orderNumber'))
+                            ->where('anNo', $request->input('anNo'))
+                            ->update([
+                                'anQty' => $request->input('anQty'),
+                                'anRebate2' => $request->input('anRebate2')
+                            ]);
+        
+        return redirect()->back();
     }
 
     public function insert(Request $request){
@@ -69,6 +115,7 @@ class PantheonController extends Controller
         $order->anRebate3 = $request->input('anRebate3');
         $order->orderNumber = $request->input('orderNumber');
         $order->anForPay = $anForPay;
+        $order->anNo = $request->input('anNo');
 
         $order->save();
 

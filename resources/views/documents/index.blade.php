@@ -31,47 +31,112 @@
                 <div id="collapse-filters" class="filters collapse show">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Kreiranje narudžbe</h4>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Korisnik</th>
-                                        <th scope="col">Adresa</th>
-                                        <th scope="col">Kupac</th>
-                                        <th scope="col">Platisa</th>
-                                        <th scope="col">Datum</th>
-                                        <th scope="col">Opcije</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>{{ $subject->acName2 }}</td>
-                                        <td>{{ $subject->acAddress }}</td>
-                                        <td>{{ $subject->acWayOfSale == 'Z' ? 'Veleprodajni' : 'Maloprodajni' }}</td>
-                                        <td>{{ $subject->acPayer }}</td>
-                                        <td>{{ $order[0]->adDate }}</td>
-                                        <td><button class="btn btn-success">Potvrdi dokument</button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <h4 class="card-title">Narudžba</h4>
+                            <hr>
+
+                            
+                            
                             <hr>
                         </div>
                         <div class="card-content">
                             
                             <div class="card-body">
-                            <form action="{{route('createorder')}}" method="post">
+                            <div class="col-12 p-0">
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-3 border-right">
+                                        <h5>Mjesto isporuke</h5>
+                                        <p>{{ $subject->acName2 }}</p>
+                                        <p>{{ $subject->acAddress }}</p>
+                                        <p>{{ $subject->acFieldSH }} {{ $subject->acFieldSl }}</p>
+                                        <p>{{ $subject->acCode }}</p>
+                                    </div>
+                                    <div class="col-md-3 border-right">
+                                        <h5>Platitelj</h5>
+                                        <p>{{ $acPayer->acName2 }}</p>
+                                        <p>{{ $acPayer->acAddress }}</p>
+                                        <p>{{ $acPayer->acFieldSH }} {{ $subject->acFieldSl }}</p>
+                                        <p>{{ $acPayer->acCode }}</p>
+                                    </div>
+                                    <div class="col-md-3 border-right">
+                                        <h5>Vrijeme kreiranja</h5>
+                                        <p>{{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $order->adDate)
+                                    ->format('d.m.Y') }}</p>
+                                        <p>{{ Carbon\Carbon::createFromFormat('Y-m-d', $order->anDaysForValid)
+                                    ->format('d.m.Y') }}</p>
+                                        <br>
+                                        <br>
+                                        <h5>Veleprodaja</h5>
+                                    </div>
+                                    <div class="col-md-2 border-right">
+                                        <table>
+                                            <tr>
+                                                <th><h5>Ukupno</h5></th>
+                                            </tr>
+                                            <tr>
+                                                <th>Vrijednost:</th>
+                                                <th class="text-right">{{round($order->anForPay / 1.17, 2)}} KM</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Iznos PDV-a:</th>
+                                                <th class="text-right">{{round($order->anForPay * 0.145292, 2)}} KM</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Ukupno sa PDV-om:</th>
+                                                <th class="text-right">{{round($order->anForPay, 2)}} KM</th>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    
+                                    <div class="col-md-1">
+                                        <table class="float-right">
+                                            <tr>
+                                                <th><h6 style="font-size: 12px;">Broj dokumenta</h6></th>
+                                            </tr>
+                                            <tr>
+                                                <td><h4>{{$order->orderNumber}}</h4></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nepotvrdjeno</th>
+                                            </tr>
+                                            <tr>
+                                                <th><br></th>
+                                            </tr>
+                                            <tr>
+                                                <th><br></th>
+                                            </tr>
+                                            <tr>
+                                                <form action="" method="POST">
+                                                {{ csrf_field() }}
+                                                {{ method_field('PUT') }}
+                                                    <input type="hidden" name="acStatus" value="true">
+                                                    <input type="hidden" name="orderNumber" value="{{$order->orderNumber}}">
+                                                    <th class="btn-group"><button class="btn btn-success" type="submit">Potvrdi</button></th>
+                                                </form>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <form action="" method="post">
                                     {{ csrf_field() }}
 
-                                    <input type="hidden" name="orderNumber" value="{{$order[0]->id}}">
-                                    <input type="hidden" name="acSubject" class="acSubject"  value="{{$order[0]->acSubject}}">
+                                    <input type="hidden" name="orderNumber" value="{{$order->orderNumber}}">
+                                    <input type="hidden" name="acSubject" class="acSubject"  value="{{$order->acSubject}}">
                                     <input type="hidden" name="acWayOfSale" class="acWayOfSale"  value="{{$subject->acWayOfSale}}">
+                                    @if(count($orderItems) > 0)
+                                        <input type="hidden" name="anNo" value="{{$orderItems[0]->anNo+1}}">
+                                    @else
+                                        <input type="hidden" name="anNo" value="1">
+                                    @endif
                                     <div class="form-row">
-                                        <div class="form-group col-md-1">
+                                        <div class="form-group col-md-2">
                                             <label for="acIdent">Šifra artikla</label>
                                             <input type="text" class="form-control search acIdent" name="acIdent" id="acIdent" placeholder="Šifra aritkla" autocomplete="off" required>
                                             
                                         </div>
-                                        <div class="form-group col-md-2">
+                                        <div class="form-group col-md-3">
                                             <label for="acIdent">Naziv artikla</label>
                                             <input type="text" class="form-control search acName" name="acName" id="acName" placeholder="Naziv aritkla" autocomplete="off" required>
                                             
@@ -100,8 +165,8 @@
                                             <label for="anQty">R3</label>
                                             <input type="decimal" class="form-control anRebate3" name="anRebate3" id="anRebate3"  placeholder="Rabat3" style="pointer-events:none;background:#ddd;">
                                         </div>
-                                        <div class="form-group col-md-3">
-                                            <button class="btn btn-success" type="submit">Dodaj</button>
+                                        <div class="form-group col-md-1">
+                                            <button class="btn btn-success float-right" type="submit" style="width: 91%;">Dodaj</button>
                                         </div>
                                         <hr>
                                         <div class="form-control search-result col-md-3" style="overflow: scroll;display:none;">
@@ -112,40 +177,51 @@
                                 <table class="table col-12">
                                     <thead>
                                         <tr style="padding:0">
-                                            <th scope="col">#</th>
-                                            <th scope="col">Šifra artikla</th>
-                                            <th scope="col">Količina</th>
-                                            <th scope="col">Cijena</th>
-                                            <th scope="col">Cijena bez PDV-a</th>
+                                            <th scope="col" class="text-center">#</th>
+                                            <th scope="col" class="text-center">Šifra artikla</th>
+                                            <th scope="col" class="text-center">Količina</th>
+                                            <th scope="col" class="text-center">Cijena</th>
+                                            <th scope="col" class="text-center">Cijena bez PDV-a</th>
                                             
-                                            <th scope="col">Rabat1</th>
-                                            <th scope="col">Rabat2</th>
-                                            <th scope="col">Rabat3</th>
-                                            <th scope="col">Vrijednost</th>
-                                            <th scope="col">Ukupno sa PDV-om</th>
+                                            <th scope="col" class="text-center">Rabat1</th>
+                                            <th scope="col" class="text-center">Rabat2</th>
+                                            <th scope="col" class="text-center">Rabat3</th>
+                                            <th scope="col" class="text-center">Vrijednost</th>
+                                            <th scope="col" class="text-center">Ukupno sa PDV-om</th>
+                                            <th scope="col" class="text-center">Opcije</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        @forelse($orderItems as $x => $item )
-                                        <tr>
-                                            <th scope="row">{{$x+1}}</th>
-                                            <td>{{$item->acIdent}}</td>
-                                            <th>{{$item->anQty}}</th>
-                                            <td>{{$item->anPrice}}</td>
-                                            <td>{{round(($item->anPrice) / 1.17, 2)}}</td>
-                                            
-                                            <th>{{$item->anRebate1}}</th>
-                                            <th>{{$item->anRebate2}}</th>
-                                            <th>{{$item->anRebate3}}</th>
-                                            <th>{{$item->anForPay * $item->anQty}}</th>
-                                            <th>{{round(($item->anForPay * $item->anQty) * 1.17, 2)}}</th>
-                                        </tr>
-                                        @empty
-                                        <tr>
-                                            <th colspan="6"><h3 class="text-center">Nema dodati artikala</h3></th>
-                                        </tr>
-                                        @endforelse
-                                    </tbody>
+                                    <form action="" method="post">
+                                    {{ csrf_field() }}
+                                    {{ method_field('PUT') }}
+                                    
+                                        <tbody>
+                                            @forelse($orderItems as $x => $item )
+                                                <input type="hidden" name="orderNumber" value="{{$item->orderNumber}}">
+                                                <input type="hidden" name="anNo" value="{{$item->anNo}}">
+                                                <tr>
+                                                    <th scope="row"  class="text-right">{{$item->anNo}}</th>
+                                                    <td class="text-right">{{$item->acIdent}}</td>
+
+                                                    <th class="text-right"><input type="text" name="anQty" class="form-control col-4 float-right mr-4" value="{{$item->anQty}}"></th>
+
+                                                    <td class="text-right">{{$item->anPrice}}</td>
+                                                    <td class="text-right">{{round(($item->anPrice) / 1.17, 2)}}</td>
+                                                    
+                                                    <th class="text-right">{{$item->anRebate1}}</th>
+                                                    <th class="text-right"><input type="text" name="anRebate2" class="form-control col-4 float-right mr-4" value="{{$item->anRebate2}}"></th>
+                                                    <th class="text-right">{{$item->anRebate3}}</th>
+                                                    <th class="text-right">{{$item->anForPay * $item->anQty}}</th>
+                                                    <th class="text-right">{{round(($item->anForPay * $item->anQty) * 1.17, 2)}}</th>
+                                                    <th class="p-0"><button class="btn btn-success float-right" type="submit">Izmjeni</button></th>
+                                                </tr>
+                                                @empty
+                                                <tr>
+                                                    <th colspan="6"><h3 class="text-center">Nema dodati artikala</h3></th>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </form>
                                 </table>
                                 
                                
@@ -165,9 +241,15 @@
 
             $(".search-result").hide()
             $(".appended-search").remove()
+            if(this.value < 1){
+                $(".search-result").hide()
+                $(".appended-search").remove()
+
+                return false
+            }
             $.ajax({
                 type: "GET",
-                url: "api/ba/projects/search",
+                url: location.origin+"/api/ba/projects/search",
                 data:{
                     searchName: $(this).attr('name'),
                     search: this.value,
@@ -200,7 +282,7 @@
 
                     $.ajax({
                         type: "GET",
-                        url: "api/ba/projects/search/rabat",
+                        url: location.origin+"/api/ba/projects/search/rabat",
                         data:{
                             acIdent: $('.acIdent').val(),
                             acSubject: $('.acSubject').val()

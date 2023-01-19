@@ -62,6 +62,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                                 <a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     @if(session('db_name') == 'ba')
                                     <i class="flag-icon flag-icon-ba"></i>
+                                    
                                         <span class="menu-title">Bosna i Hercegovina</span>
                                     @elseif(session('db_name') == 'rs')
                                     <i class="flag-icon flag-icon-rs"></i>
@@ -297,8 +298,8 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                     </li>
                     @endcan
                     @can('view-document')
-                    <li class="nav-item @if(request()->is('*document*')){{ 'active' }}@endif">
-                        <a href="{{ route('document.index') }}">
+                    <li class="nav-item @if(request()->is('orders')){{ 'active' }}@endif">
+                        <a href="{{ route('orders') }}">
                             <i class="feather icon-file"></i>
                             <span class="menu-title">{{ userIsClient() ? trans('document.title_client') : trans('document.title') }}</span>
                         </a>
@@ -413,6 +414,32 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                     <div class="search-result-subject" style="overflow: scroll;display:none;">
                         
                     </div>
+                    <hr>
+                    <h4 class="text-danger">Imate nepotvrdjene narudjbe</h4>
+                    <hr>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Kupac</th>
+                            <th scope="col">Platitelj</th>
+                            <th scope="col">Broj narudjbe</th>
+                            <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(ScopedDocument::orders() as $key => $order)
+                            <tr>
+                                <th scope="row">{{$key+1}}</th>
+                                <td>{{$order->subject->acName2}}</td>
+                                <td>{{$order->acPayerName}}</td>
+                                <td><a href="{{route('createorder', ['id' => $order->id])}}">{{$order->orderNumber}}</a></td>
+                                <td class="text-danger">Nepotvrdjena</td>
+                            </tr>
+                            @endforeach
+                            
+                        </tbody>
+                        </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
@@ -478,7 +505,6 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
 <script>
     $(document).ready(function(){
         $(".searchSubject").keyup(function(){
-
             if(this.value.length < 1){
                 $(".search-result-subject").hide()
                 $(".appended-search-subject").remove()
@@ -489,7 +515,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
             $(".appended-search-subject").remove()
             $.ajax({
                 type: "GET",
-                url: "api/ba/subjects/search",
+                url: location.origin+"/api/ba/subjects/search",
                 data:{
                     search: this.value
                 },
@@ -500,7 +526,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
 
                     if(res.length > 0){
                         for(var x = 0;x < res.length;x++){
-                            $(".search-result-subject").append("<a href='createorder?acSubject="+res[x].acSubject+"' class='border appended-search-subject p1 cursor-pointer' style='color: black !important;padding:5px;'>"+res[x].acName2 + '||' +res[x].acAddress +"</a>")
+                            $(".search-result-subject").append("<a href="+location.origin+"/createorder?acSubject="+res[x].acSubject+" class='border appended-search-subject p1 cursor-pointer' style='color: black !important;padding:5px;'>"+res[x].acName2 + '||' +res[x].acAddress +"</a>")
                         }
                     }
                 },

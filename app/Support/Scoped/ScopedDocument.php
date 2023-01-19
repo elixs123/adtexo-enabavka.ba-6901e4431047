@@ -4,6 +4,7 @@ namespace App\Support\Scoped;
 
 use App\Document;
 use App\User;
+use App\The_Order;
 
 /**
  * Class ScopedDocument
@@ -74,6 +75,12 @@ class ScopedDocument
         $this->checkForScopedDocument();
     }
     
+    public function orders(){
+        $orders = The_Order::with('subject')->where('acStatus', 'N')->get();
+
+        return $orders;
+    }
+
     /**
      * @return void
      */

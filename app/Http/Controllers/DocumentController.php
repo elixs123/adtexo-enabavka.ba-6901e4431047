@@ -10,6 +10,10 @@ use App\Support\Controller\ActionHelper;
 use App\Support\Controller\DocumentHelper;
 use App\User;
 use Illuminate\Support\Facades\DB;
+use App\The_OrderItem;
+use App\The_Order;
+use App\Product;
+use App\Subject;
 
 /**
  * Class DocumentController
@@ -18,22 +22,7 @@ use Illuminate\Support\Facades\DB;
  */
 class DocumentController extends Controller
 {
-    use DocumentHelper, ActionHelper;
-    
-    /**
-     * @var \App\Document
-     */
-    private $document;
 
-    /**
-     * @var \App\Client
-     */
-    private $client;
-    
-    /**
-     * @var \App\User
-     */
-    private $user;
     
     /**
      * DocumentController constructor.
@@ -42,17 +31,9 @@ class DocumentController extends Controller
      * @param \App\Client $client
      * @param \App\User $user
      */
-    public function __construct(Document $document, Client $client, User $user)
+    public function __construct()
 	{
-        $this->document = $document;
-        $this->client = $client;
-        $this->user = $user;
-
-        $this->middleware('auth');
-        $this->middleware('emptystringstonull');
-        $this->middleware('acl:view-document', ['only' => ['index']]);
-        $this->middleware('acl:create-document', ['only' => ['create', 'store']]);
-        $this->middleware('acl:edit-document', ['only' => ['edit', 'update']]);
+        
     }
     
     /**
@@ -63,135 +44,9 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        ini_set("memory_limit","2024M");
-        ini_set('max_execution_time', '300');
+        $orders = The_Order::with('subject')->get();
 
-        $syncStatus = request()->get('sync_status');
-        $statusId = request()->get('status');
-        $clientId = request()->get('client_id');
-        $typeId = request()->get('type_id');
-        $keywords = request()->get('keywords');
-        $export = request()->get('export', false);
-        $startDate = request('start_date') ?: now()->subDays(30)->toDateString();
-        $endDate = request('end_date') ?: now()->toDateString();
-        $createdBy = request('created_by');
-        $search_id = request('sid');
-
-        if (is_numeric($search_id)) {
-            $this->document->searchDocumentId = $search_id;
-        } else {
-            $this->document->syncStatus = $syncStatus;
-            $this->document->startDate = $startDate;
-            $this->document->endDate = $endDate;
-            $this->document->keywords = $keywords;
-            $this->document->typeId = $typeId;
-        }
-        $this->document->limit = $export != false ? null : 25;
-        $this->document->paginate = $export != false ? false : true;
-        $this->document->relation(['rStatus', 'rType', 'rClient', 'rSyncStatus']);
-
-        if (userIsSalesman() || userIsFocuser()) {
-            $this->document->createdBy = $this->getUserId();
-            
-            if (userIsSalesman()) {
-                $this->document->relation(['rExpressPost']);
-            }
-        } else {
-            $this->document->createdBy = request('created_by');
-        }
-        
-        if (userIsSupervisor()) {
-            $this->client->limit = null;
-            $this->client->statusId = ['active', 'pending'];
-            $this->client->isLocation = true;
-            $this->client->personType = 'supervisor_person';
-            $this->client->personId = $this->getUser()->rPerson->id;
-            
-            $this->document->clientId = request('client_id', $this->client->getAll()->pluck('id')->unique()->toArray());
-            
-            $this->document->typeId = $typeId ? $typeId : ['preorder', 'order', 'cash'];
-        } else if (userIsClient()) {
-            $this->document->typeId = 'order';
-            $this->document->clientId = $this->getUser()->client->id;
-            $this->document->relation(['rDocumentProduct', 'rCreatedBy.rPerson', 'rExpressPost']);
-        } else {
-            $this->document->clientId = $clientId;
-        }
-        
-        if (userIsEditor() || userIsWarehouse()) {
-            $this->document->typeId = $typeId ? $typeId : (userIsEditor() ? ['order', 'return', 'cash'] : ['order', 'cash']);
-            $this->document->stockId = $this->getUser()->rPerson->stock_id;
-            $this->document->statusId = $statusId ? $statusId : (userIsEditor() ? ['in_process', 'for_invoicing', 'invoiced'] : ['in_warehouse', 'for_invoicing', 'invoiced']);
-        } else {
-            $this->document->statusId = $statusId;
-        }
-        
-        if (userIsAdmin()) {
-            $this->document->createdBy = $createdBy;
-    
-            $this->document->relation(['rExpressPost']);
-        }
-    
-        if ($export == 'xml') {
-            $this->document->startDate = null;
-            $this->document->endDate = null;
-            $this->document->includeIds = request()->get('d', []);
-            $this->document->typeId = ['order'];
-        }
-        
-        if ($export != false) {
-            $this->document->relation(['rCreatedBy', 'rCreatedBy.rPerson', 'rStock', 'rClient.rCountry', 'rDocumentProduct', 'rDocumentProduct.rProduct.rCategory', 'rDocumentProduct.rProduct.category.rFatherCategory']);
-            if ($export == 'xml') {
-                $this->document->relation(['rDocumentProduct', 'rDocumentProduct.rDocument', 'rDocumentProduct.rUnit', 'rPaymentType', 'rCreatedBy']);
-            } else if($export == 'xls') {
-                $this->document->relation(['rDocumentGratisProducts']);
-            }
-        }
-        
-        if (request()->has('payment')) {
-            $payment = request('payment', 'all');
-            
-            if ($payment != 'all') {
-                $this->document->typeId = ['order'];
-                $this->document->isPayed = (boolean) $payment;
-            }
-        }
-        
-        $items = $this->document->getAll();
-    
-        if($export == 'pdf') {
-            return $this->exportToPDF($items);
-        } else if($export == 'xls') {
-            return $this->exportToExcel($items);
-        } else if ($export == 'xml') {
-            return $this->exportToXml($items);
-        }
-    
-        $clients = [];
-        if ($clientId) {
-            $client = $this->client->getOne($clientId);
-        
-            if (!is_null($client)) {
-                $clients[$client->id] = $client->full_name;
-            }
-        }
-        
-        $persons = [];
-        if ($createdBy) {
-            $user = $this->user->getOne($createdBy);
-            
-            if (!is_null($user) && ($user->rPerson->id)) {
-                $persons[$createdBy] = $user->rPerson->name;
-            }
-        }
-
-        return view('document.index', [
-            'items' => $items,
-            'clients' => $clients,
-            'persons' => $persons,
-            'start_date' => $startDate,
-            'end_date' => $endDate,
-        ]);
+        return view('document.index', ['orders' => $orders]);
     }
     
     /**

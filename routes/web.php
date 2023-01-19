@@ -60,8 +60,12 @@ Route::group(['middleware' => ['auth', 'acl', 'emptystringstonull', 'user.person
      * Pantheon
      */
 
-    Route::get('/createorder', 'PantheonController@index')->name('createorder');
-    Route::post('/createorder', 'PantheonController@insert');
+    Route::get('/createorder', 'PantheonController@createOrder')->name('neworder');
+    Route::get('/createorder/{id}', 'PantheonController@index')->name('createorder');
+    Route::post('/createorder/{id}', 'PantheonController@insert');
+    Route::put('/createorder/{id}', 'PantheonController@update');
+
+    Route::get('/orders', 'DocumentController@index')->name('orders');
     /*
     |--------------------------------------------------------------------------
     | Invoicing Routes
@@ -183,7 +187,9 @@ Route::group(['middleware' => ['auth', 'acl', 'emptystringstonull', 'user.person
     Route::post('document/status', 'Document\StatusController@change')->name('document.status.change');
     Route::get('document/gratis', 'Document\GratisProductController@index')->name('document.gratis');
     Route::post('document/gratis/process', 'Document\GratisProductController@process')->name('document.gratis.process');
-    Route::resource('document', 'DocumentController', ['parameters' => ['document' => 'id']]);
+    
+    
+    //Route::resource('document', 'DocumentController', ['parameters' => ['document' => 'id']]);
     Route::post('document/{id}/open', 'Document\OpenController@open')->name('document.open');
     Route::post('document/{id}/copy', 'Document\CopyController@copy')->name('document.copy');
     Route::post('document/{id}/reverse', 'Document\ReverseController@reverse')->name('document.reverse');
