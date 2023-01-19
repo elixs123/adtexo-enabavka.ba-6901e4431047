@@ -38,7 +38,7 @@
                         <th scope="col">Status</th>
                         <th scope="col">Datum kreiranja</th>
                         <th scope="col">Datum vazenja</th>
-                        <th scope="col">Broj naruđbe</th>
+                        <th scope="col">Broj narudžbe</th>
                         <th scope="col">Vrijednost</th>
                         <th scope="col">Iznos PDV-a</th>
                         <th scope="col">Ukupno sa PDV-om</th>

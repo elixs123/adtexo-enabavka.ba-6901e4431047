@@ -416,7 +416,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                     </div>
                     @if(count(ScopedDocument::orders()) > 0) 
                     <hr>
-                        <h4 class="text-danger">Imate nepotvrdjene naruđbe</h4>
+                        <h4 class="text-danger">Imate nepotvrdjene narudžbe</h4>
                     <hr>
                     <table class="table">
                             <thead>
@@ -424,7 +424,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                                 <th scope="col">#</th>
                                 <th scope="col">Kupac</th>
                                 <th scope="col">Platitelj</th>
-                                <th scope="col">Broj naruđbe</th>
+                                <th scope="col">Broj narudžbe</th>
                                 <th scope="col">Status</th>
                                 </tr>
                             </thead>
