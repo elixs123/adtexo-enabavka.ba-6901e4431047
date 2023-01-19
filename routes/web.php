@@ -189,7 +189,7 @@ Route::group(['middleware' => ['auth', 'acl', 'emptystringstonull', 'user.person
     Route::post('document/gratis/process', 'Document\GratisProductController@process')->name('document.gratis.process');
     
     
-    //Route::resource('document', 'DocumentController', ['parameters' => ['document' => 'id']]);
+    Route::resource('document', 'DocumentController', ['parameters' => ['document' => 'id']]);
     Route::post('document/{id}/open', 'Document\OpenController@open')->name('document.open');
     Route::post('document/{id}/copy', 'Document\CopyController@copy')->name('document.copy');
     Route::post('document/{id}/reverse', 'Document\ReverseController@reverse')->name('document.reverse');
