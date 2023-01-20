@@ -201,6 +201,7 @@
                                                 <input type="hidden" name="anForPay" value="{{$item->anForPay}}">
                                                 <input type="hidden" name="anPrice" value="{{$item->anPrice}}">
                                                 <input type="hidden" name="anRebate1" value="{{$item->anRebate1}}">
+                                                <input type="hidden" name="anRebate1" value="{{$item->anRebate2}}">
                                                 <input type="hidden" name="anRebate3" value="{{$item->anRebate3}}">
                                                 <tr>
                                                     <th scope="row"  class="text-right">{{$item->anNo}}</th>
@@ -212,7 +213,7 @@
                                                     <td class="text-right">{{number_format($item->anPrice, 2, '.', '\'')}}</td>
                                                     
                                                     <th class="text-right">{{$item->anRebate1}}</th>
-                                                    <th class="text-right"><input type="text" name="anRebate2" class="form-control col-4 float-right mr-4" value="{{$item->anRebate2}}"></th>
+                                                    <th class="text-right">{{$item->anRebate2}}></th>
                                                     <th class="text-right">{{$item->anRebate3}}</th>
                                                     <th class="text-right">{{number_format($item->anForPay * $item->anQty, 2, '.', '\'')}}</th>
                                                     <th class="text-right">{{number_format(($item->anForPay * $item->anQty) * 1.17, 2, '.', '\'')}}</th>
