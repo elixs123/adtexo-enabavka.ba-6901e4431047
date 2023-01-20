@@ -69,17 +69,17 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="deleteModalLabel">Modal title</h5>
+                                <h5 class="modal-title" id="deleteModalLabel">Da li ste sigurni</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Otkaži</button>
                                 <form action="{{route('orders')}}" method="post">
                                 <input type="hidden" name="orderNumber" value="{{$order->orderNumber}}">
                                     {{ csrf_field() }}
-                                    <button class="btn btn-primary" type="submit">Izbrisi</button>
+                                    <button class="btn btn-primary" type="submit">Izbriši</button>
                                 </form>
                             </div>
                             </div>
