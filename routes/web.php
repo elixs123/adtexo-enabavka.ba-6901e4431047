@@ -66,6 +66,7 @@ Route::group(['middleware' => ['auth', 'acl', 'emptystringstonull', 'user.person
     Route::put('/createorder/{id}', 'PantheonController@update');
 
     Route::get('/orders', 'DocumentController@index')->name('orders');
+    Route::post('/orders', 'DocumentController@delete');
     /*
     |--------------------------------------------------------------------------
     | Invoicing Routes

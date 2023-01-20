@@ -14,6 +14,7 @@ use App\The_OrderItem;
 use App\The_Order;
 use App\Product;
 use App\Subject;
+use Illuminate\Http\Request;
 
 /**
  * Class DocumentController
@@ -47,6 +48,17 @@ class DocumentController extends Controller
         $orders = The_Order::with('subject')->get();
 
         return view('document.index', ['orders' => $orders]);
+    }
+
+    public function delete(Request $request){
+        $request->validate([
+            'orderNumber' => 'required:max:40'
+        ]);
+
+        The_Order::where('orderNumber', $request->input('orderNumber'))->delete();
+        The_OrderItem::where('orderNumber', $request->input('orderNumber'))->delete();
+
+        return redirect()->back();
     }
     
     /**

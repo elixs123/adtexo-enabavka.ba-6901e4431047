@@ -33,9 +33,6 @@
                         <div class="card-header">
                             <h4 class="card-title">Narudžba</h4>
                             <hr>
-
-                            
-                            
                             <hr>
                         </div>
                         <div class="card-content">
@@ -75,15 +72,15 @@
                                             </tr>
                                             <tr>
                                                 <th>Vrijednost:</th>
-                                                <th class="text-right">{{number_format($order->anForPay, 2, '.', '\'')}} KM</th>
+                                                <th class="text-right">{{number_format($order->anForPay, 2, '.', ',')}} KM</th>
                                             </tr>
                                             <tr>
                                                 <th>Iznos PDV-a:</th>
-                                                <th class="text-right">{{number_format($order->anForPay * 0.145292, 2, '.', '\'')}} KM</th>
+                                                <th class="text-right">{{number_format(($order->anForPay * 1.17) - ($order->anForPay * 1.17) / 1.17 , 2, '.', ',')}} KM</th>
                                             </tr>
                                             <tr>
                                                 <th>Ukupno sa PDV-om:</th>
-                                                <th class="text-right">{{number_format($order->anForPay * 1.17, 2, '.', '\'')}} KM</th>
+                                                <th class="text-right">{{number_format($order->anForPay * 1.17, 2, '.', ',')}} KM</th>
                                             </tr>
                                         </table>
                                     </div>
@@ -159,7 +156,7 @@
                                         </div>
                                         <div class="form-group col-md-1">
                                             <label for="anQty">R2</label>
-                                            <input type="decimal" class="form-control anRebate2" name="anRebate2" id="anRebate2"  placeholder="Rabat2" autocomplete="off">
+                                            <input type="decimal" class="form-control anRebate2" name="anRebate2" id="anRebate2"  placeholder="Rabat2" autocomplete="off" style="pointer-events:none;background:#ddd;">
                                         </div>
                                         <div class="form-group col-md-1">
                                             <label for="anQty">R3</label>
@@ -179,6 +176,7 @@
                                         <tr style="padding:0">
                                             <th scope="col" class="text-center">#</th>
                                             <th scope="col" class="text-center">Šifra artikla</th>
+                                            <th scope="col" class="text-center">Naziv</th>
                                             <th scope="col" class="text-center">Količina</th>
                                             <th scope="col" class="text-center">Cijena</th>
                                             <th scope="col" class="text-center">Cijena bez PDV-a</th>
@@ -206,19 +204,19 @@
                                                 <tr>
                                                     <th scope="row"  class="text-right">{{$item->anNo}}</th>
                                                     <td class="text-right">{{$item->acIdent}}</td>
+                                                    <td class="text-right">{{$item->items->acName}}</td>
 
                                                     <th class="text-right"><input type="text" name="anQty" class="form-control col-4 float-right mr-4" value="{{$item->anQty}}"></th>
 
-                                                    <td class="text-right">{{number_format($item->anPrice * 1.17, 2, '.', '\'') }}</td>
-                                                    <td class="text-right">{{number_format($item->anPrice, 2, '.', '\'')}}</td>
+                                                    <td class="text-right">{{number_format($item->anPrice * 1.17, 2, '.', ',') }}</td>
+                                                    <td class="text-right">{{number_format($item->anPrice, 2, '.', ',')}}</td>
                                                     
                                                     <th class="text-right">{{$item->anRebate1}}</th>
                                                     <th class="text-right">{{$item->anRebate2}}</th>
                                                     <th class="text-right">{{$item->anRebate3}}</th>
-                                                    <th class="text-right">{{number_format($item->anForPay * $item->anQty, 2, '.', '\'')}}</th>
-                                                    <th class="text-right">{{number_format(($item->anForPay * $item->anQty) * 1.17, 2, '.', '\'')}}</th>
+                                                    <th class="text-right">{{number_format($item->anForPay * $item->anQty, 2,'.', ',')}}</th>
+                                                    <th class="text-right">{{number_format(($item->anForPay * $item->anQty) * 1.17, 2, '.', ',')}}</th>
                                                     <th class="p-0">
-                                                        <button class="btn btn-danger float-right m-1" type="submit" name="btn_delete">Izbrisi</button>
                                                         <button class="btn btn-success float-right m-1" type="submit" name="btn_update">Izmjeni</button>
                                                     </th>
                                                 </tr>
@@ -274,7 +272,7 @@
                         $(".search-result").show()
 
                         for(var x = 0;x < res['products'].length;x++){
-                            $(".search-result").append("<p value="+res['products'][x].acIdent+" anRTPrice="+res['products'][x].anSalePrice+" anWSPrice2="+res['products'][x].anWSPrice+" class='border appended-search p1 cursor-pointer' style='color: black !important;padding:5px;'>"+res['products'][x].acName +"</p>")
+                            $(".search-result").append("<p value="+res['products'][x].acIdent+" anRTPrice="+res['products'][x].anSalePrice+" anWSPrice2="+res['products'][x].anWSPrice+" class='border appended-search p1 cursor-pointer' style='color: black !important;padding:5px;'>"+res['products'][x].acIdent + ' || ' +res['products'][x].acName +"</p>")
                         }
                     }
                    $('.cursor-pointer').click(function(){

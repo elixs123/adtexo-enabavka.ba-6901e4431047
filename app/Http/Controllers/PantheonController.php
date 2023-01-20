@@ -16,7 +16,8 @@ class PantheonController extends Controller
 
         $order = The_Order::where('id', $id)->firstOrFail();
 
-        $orderItems = The_OrderItem::where('orderNumber', $order->orderNumber)->orderBy('anNo', 'desc')->get();
+        $orderItems = The_OrderItem::where('orderNumber', $order->orderNumber)->with('items')
+        ->orderBy('anNo', 'desc')->get();
 
         $subject = Subject::where('acSubject', $order->acSubject)->first();
 
@@ -108,7 +109,6 @@ class PantheonController extends Controller
                             ]);
 
        
-
         $sumAnForPay = The_OrderItem::where('orderNumber', $request->input('orderNumber'))->sum(DB::raw('anForPay * anQty'));
 
 
@@ -120,6 +120,11 @@ class PantheonController extends Controller
     }
 
     public function insert(Request $request){
+        $acIdent = Product::where('acIdent', $request->input('acIdent'))->get();
+        if($acIdent->isEmpty()){
+            return redirect()->back();
+        }
+
         $order = new The_OrderItem;
         $order->acIdent = $request->input('acIdent');
 

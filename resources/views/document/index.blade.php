@@ -42,6 +42,7 @@
                         <th scope="col">Vrijednost</th>
                         <th scope="col">Iznos PDV-a</th>
                         <th scope="col">Ukupno sa PDV-om</th>
+                        <th scope="col">Opcije</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,6 +62,13 @@
                         <td class="text-right">{{round($order->anForPay / 1.17, 2)}} KM</td>
                         <td class="text-right">{{round($order->anForPay * 0.145292, 2)}} KM</td>
                         <td class="text-right">{{round($order->anForPay, 2)}} KM</td>
+                        @if($order->acStatus == 'N')
+                        <form action="{{route('orders')}}" method="post">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="orderNumber" value="{{$order->orderNumber}}">
+                            <td class="text-right"><button type="submit" class="btn btn-danger" type="submit">Izbriši</button></td>
+                        </form>
+                        @endif
                     </tr>
                     @empty
                     <tr>
