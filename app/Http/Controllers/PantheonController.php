@@ -16,7 +16,7 @@ class PantheonController extends Controller
 
         $order = The_Order::where('id', $id)->firstOrFail();
 
-        $orderItems = The_OrderItem::where('orderNumber', $order->orderNumber)->get();
+        $orderItems = The_OrderItem::where('orderNumber', $order->orderNumber)->orderBy('anNo', 'desc')->get();
 
         $subject = Subject::where('acSubject', $order->acSubject)->first();
 
@@ -61,7 +61,6 @@ class PantheonController extends Controller
     }
 
     public function update(Request $request){
-        
         if($request->has('acStatus')){
             $request->validate([
                 'orderNumber' => 'required:string:max:100'
@@ -74,19 +73,42 @@ class PantheonController extends Controller
                             
             return redirect()->route('orders');
         }
-        
+
         $request->validate([
             'orderNumber' => 'required:string:max:100',
             'anNo' => 'required:int',
         ]);
+
+        if($request->has('btn_delete')){
+            $orderItem = The_OrderItem::where('orderNumber', $request->input('orderNumber'))
+            ->where('anNo', $request->input('anNo'))->delete();
+
+            $sumAnForPay = The_OrderItem::where('orderNumber', $request->input('orderNumber'))->sum(DB::raw('anForPay * anQty'));
+
+
+            The_Order::where('orderNumber', $request->input('orderNumber'))->update([
+                'anForPay' => $sumAnForPay
+            ]);
+
+            return redirect()->back();
+        }
+
+        $rebate1 = ((float) $request->input('anPrice') * $request->input('anQty')) - ((float) $request->input('anPrice') * $request->input('anQty') * (float) $request->input('anRebate1') / 100);
+        
+        $rebate2 = $rebate1 - ($rebate1 * ((float) $request->input('anRebate2') / 100));
+
+        $anForPay = $rebate2 - ($rebate2 * ((float) $request->input('anRebate3') / 100));
 
         
         The_OrderItem::where('orderNumber', $request->input('orderNumber'))
                             ->where('anNo', $request->input('anNo'))
                             ->update([
                                 'anQty' => $request->input('anQty'),
-                                'anRebate2' => $request->input('anRebate2')
+                                'anRebate2' => $request->input('anRebate2'),
+                                'anForPay' => $anForPay
                             ]);
+
+       
 
         $sumAnForPay = The_OrderItem::where('orderNumber', $request->input('orderNumber'))->sum(DB::raw('anForPay * anQty'));
 
@@ -99,20 +121,16 @@ class PantheonController extends Controller
     }
 
     public function insert(Request $request){
-
-       
-
         $order = new The_OrderItem;
         $order->acIdent = $request->input('acIdent');
 
         if($request->has('acWayOfSale') == 'Z'){
-            $order->anPrice = $request->input('anWSPrice2');
-            $rebate1 = ((float) $request->input('anWSPrice2') * $request->input('anQty') / 1.17) - ((float) $request->input('anWSPrice2') * $request->input('anQty') / 1.17 * (float) $request->input('anRebate1') / 100);
+            $order->anPrice = $request->input('anWSPrice2') * 1.17;
+            $rebate1 = ((float) $request->input('anWSPrice2') * $request->input('anQty')) - ((float) $request->input('anWSPrice2') * $request->input('anQty') * (float) $request->input('anRebate1') / 100);
         }else{
-            $order->anPrice = $request->input('anRTPrice');
-            $rebate1 = ((float) $request->input('anRTPrice') * $request->input('anQty') / 1.17)  - ((float) $request->input('anRTPrice') * $request->input('anQty') / 1.17 *((float) $request->input('anRebate1') / 100));
+            $order->anPrice = $request->input('anRTPrice') * 1.17;
+            $rebate1 = ((float) $request->input('anRTPrice') * $request->input('anQty'))  - ((float) $request->input('anRTPrice') * $request->input('anQty') *((float) $request->input('anRebate1') / 100));
         }
-
 
         $rebate2 = $rebate1 - ($rebate1 * ((float) $request->input('anRebate2') / 100));
         $rebate3 = $rebate2 - ($rebate2 * ((float) $request->input('anRebate3') / 100));
@@ -128,6 +146,12 @@ class PantheonController extends Controller
         $order->anNo = $request->input('anNo');
 
         $order->save();
+
+        $sumAnForPay = The_OrderItem::where('orderNumber', $request->input('orderNumber'))->sum(DB::raw('anForPay * anQty'));
+
+        The_Order::where('orderNumber', $request->input('orderNumber'))->update([
+            'anForPay' => $sumAnForPay
+        ]);
 
         return redirect()->back();
     }

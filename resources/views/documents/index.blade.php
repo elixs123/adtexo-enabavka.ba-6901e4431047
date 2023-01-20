@@ -75,15 +75,15 @@
                                             </tr>
                                             <tr>
                                                 <th>Vrijednost:</th>
-                                                <th class="text-right">{{round($order->anForPay / 1.17, 2)}} KM</th>
+                                                <th class="text-right">{{number_format($order->anForPay, 2, '.', '\'')}} KM</th>
                                             </tr>
                                             <tr>
                                                 <th>Iznos PDV-a:</th>
-                                                <th class="text-right">{{round($order->anForPay * 0.145292, 2)}} KM</th>
+                                                <th class="text-right">{{number_format($order->anForPay * 0.145292, 2, '.', '\'')}} KM</th>
                                             </tr>
                                             <tr>
                                                 <th>Ukupno sa PDV-om:</th>
-                                                <th class="text-right">{{round($order->anForPay, 2)}} KM</th>
+                                                <th class="text-right">{{number_format($order->anForPay * 1.17, 2, '.', '\'')}} KM</th>
                                             </tr>
                                         </table>
                                     </div>
@@ -198,21 +198,28 @@
                                                 {{ method_field('PUT') }}
                                                 <input type="hidden" name="orderNumber" value="{{$item->orderNumber}}">
                                                 <input type="hidden" name="anNo" value="{{$item->anNo}}">
+                                                <input type="hidden" name="anForPay" value="{{$item->anForPay}}">
+                                                <input type="hidden" name="anPrice" value="{{$item->anPrice}}">
+                                                <input type="hidden" name="anRebate1" value="{{$item->anRebate1}}">
+                                                <input type="hidden" name="anRebate3" value="{{$item->anRebate3}}">
                                                 <tr>
                                                     <th scope="row"  class="text-right">{{$item->anNo}}</th>
                                                     <td class="text-right">{{$item->acIdent}}</td>
 
                                                     <th class="text-right"><input type="text" name="anQty" class="form-control col-4 float-right mr-4" value="{{$item->anQty}}"></th>
 
-                                                    <td class="text-right">{{$item->anPrice}}</td>
-                                                    <td class="text-right">{{round(($item->anPrice) / 1.17, 2)}}</td>
+                                                    <td class="text-right">{{number_format($item->anPrice * 1.17, 2, '.', '\'') }}</td>
+                                                    <td class="text-right">{{number_format($item->anPrice, 2, '.', '\'')}}</td>
                                                     
                                                     <th class="text-right">{{$item->anRebate1}}</th>
                                                     <th class="text-right"><input type="text" name="anRebate2" class="form-control col-4 float-right mr-4" value="{{$item->anRebate2}}"></th>
                                                     <th class="text-right">{{$item->anRebate3}}</th>
-                                                    <th class="text-right">{{$item->anForPay * $item->anQty}}</th>
-                                                    <th class="text-right">{{round(($item->anForPay * $item->anQty) * 1.17, 2)}}</th>
-                                                    <th class="p-0"><button class="btn btn-success float-right" type="submit">Izmjeni</button></th>
+                                                    <th class="text-right">{{number_format($item->anForPay * $item->anQty, 2, '.', '\'')}}</th>
+                                                    <th class="text-right">{{number_format(($item->anForPay * $item->anQty) * 1.17, 2, '.', '\'')}}</th>
+                                                    <th class="p-0">
+                                                        <button class="btn btn-danger float-right m-1" type="submit" name="btn_delete">Izbrisi</button>
+                                                        <button class="btn btn-success float-right m-1" type="submit" name="btn_update">Izmjeni</button>
+                                                    </th>
                                                 </tr>
                                             </form>
                                                 @empty
@@ -220,6 +227,7 @@
                                                     <th colspan="6"><h3 class="text-center">Nema dodatih artikala</h3></th>
                                                 </tr>
                                             
+
                                             @endforelse
                                         </tbody>
                                     
@@ -257,9 +265,10 @@
                     acSubject: acSubject
                 },
                 success: function(res){
+                    console.log(res)
                     $(".appended-search").remove()
                     $(".search-result").css('height', '298px')
-                    $(".search-result").css('display', 'grid')
+                    //$(".search-result").css('display', 'grid')
                     if(res['products'].length > 0){
                         $(".search-result").show()
 
