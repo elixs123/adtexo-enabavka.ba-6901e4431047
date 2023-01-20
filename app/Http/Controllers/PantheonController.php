@@ -93,12 +93,11 @@ class PantheonController extends Controller
             return redirect()->back();
         }
 
-        $rebate1 = ((float) $request->input('anPrice') * $request->input('anQty')) - ((float) $request->input('anPrice') * $request->input('anQty') * (float) $request->input('anRebate1') / 100);
+        $rebate1 = ((float) $request->input('anPrice')) - ((float) $request->input('anPrice') * (float) $request->input('anRebate1') / 100);
         
         $rebate2 = $rebate1 - ($rebate1 * ((float) $request->input('anRebate2') / 100));
 
         $anForPay = $rebate2 - ($rebate2 * ((float) $request->input('anRebate3') / 100));
-
         
         The_OrderItem::where('orderNumber', $request->input('orderNumber'))
                             ->where('anNo', $request->input('anNo'))
@@ -142,7 +141,7 @@ class PantheonController extends Controller
         $order->anRebate2 = $request->input('anRebate2');
         $order->anRebate3 = $request->input('anRebate3');
         $order->orderNumber = $request->input('orderNumber');
-        $order->anForPay = $anForPay;
+        $order->anForPay = $anForPay * 1.17;
         $order->anNo = $request->input('anNo');
 
         $order->save();
