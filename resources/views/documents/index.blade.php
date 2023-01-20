@@ -213,7 +213,7 @@
                                                     <td class="text-right">{{number_format($item->anPrice, 2, '.', '\'')}}</td>
                                                     
                                                     <th class="text-right">{{$item->anRebate1}}</th>
-                                                    <th class="text-right">{{$item->anRebate2}}></th>
+                                                    <th class="text-right">{{$item->anRebate2}}</th>
                                                     <th class="text-right">{{$item->anRebate3}}</th>
                                                     <th class="text-right">{{number_format($item->anForPay * $item->anQty, 2, '.', '\'')}}</th>
                                                     <th class="text-right">{{number_format(($item->anForPay * $item->anQty) * 1.17, 2, '.', '\'')}}</th>
