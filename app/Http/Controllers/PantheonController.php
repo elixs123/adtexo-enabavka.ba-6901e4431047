@@ -129,10 +129,10 @@ class PantheonController extends Controller
         $order->acIdent = $request->input('acIdent');
 
         if($request->has('acWayOfSale') == 'Z'){
-            $order->anPrice = $request->input('anWSPrice2') * 1.17;
+            $order->anPrice = $request->input('anWSPrice2');
             $rebate1 = ((float) $request->input('anWSPrice2') * $request->input('anQty')) - ((float) $request->input('anWSPrice2') * $request->input('anQty') * (float) $request->input('anRebate1') / 100);
         }else{
-            $order->anPrice = $request->input('anRTPrice') * 1.17;
+            $order->anPrice = $request->input('anRTPrice');
             $rebate1 = ((float) $request->input('anRTPrice') * $request->input('anQty'))  - ((float) $request->input('anRTPrice') * $request->input('anQty') *((float) $request->input('anRebate1') / 100));
         }
 
@@ -146,7 +146,7 @@ class PantheonController extends Controller
         $order->anRebate2 = $request->input('anRebate2');
         $order->anRebate3 = $request->input('anRebate3');
         $order->orderNumber = $request->input('orderNumber');
-        $order->anForPay = $anForPay * 1.17;
+        $order->anForPay = $anForPay;
         $order->anNo = $request->input('anNo');
 
         $order->save();

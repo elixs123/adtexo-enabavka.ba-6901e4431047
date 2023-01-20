@@ -66,7 +66,7 @@
                         <form action="{{route('orders')}}" method="post">
                         {{ csrf_field() }}
                         <input type="hidden" name="orderNumber" value="{{$order->orderNumber}}">
-                            <td class="text-right"><button type="submit" class="btn btn-danger" type="submit">Izbriši</button></td>
+                            <td class="text-center"><button type="submit" style="border: none; background: none;"><i  class="feather icon-trash"><i></button></td>
                         </form>
                         @endif
                     </tr>

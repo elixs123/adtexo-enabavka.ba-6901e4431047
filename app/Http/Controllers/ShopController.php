@@ -80,7 +80,7 @@ class ShopController extends Controller
             $categories = $this->category->getCategoryTree(1);
         }
         
-        $brands = $this->product->getBrandsPerCategory();
+        $brands = [];
 
         $this->setPjaxParams();
 
@@ -109,11 +109,13 @@ class ShopController extends Controller
             $this->product->productIds =  ScopedDocument::scopedProducts()->pluck('id')->toArray();
         }
         
-        $items = $this->product->relation(['rProductQuantities'])->getAll();
+        $items = Product::all();
 		
         if($export == 'pdf') {
             return $this->exportToPDF($items);
         }
+
+        $categories = [];
         
         $view = isset($_SERVER["HTTP_X_PJAX"]) ? 'shop.list_fragment' : 'shop.list';
 

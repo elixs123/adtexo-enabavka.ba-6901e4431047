@@ -63,19 +63,7 @@
                         </h6>
                     </div>
 					<div class="item-rating">
-                        @if($item->price->badge_id)
-						<div class="badge badge-md" style="background-color: {{ $item->price->rBadge->background_color }};color: {{ $item->price->rBadge->color }};">
-							<span class="text-uppercase">{{ $item->price->rBadge->name }}</span>
-						</div>
-                        @endif
-                        <div>
-                            @if($item->has_discount && (!ScopedDocument::exist() || (ScopedDocument::exist() && !ScopedDocument::isReturn())))
-                            <div class="badge badge-success badge-lg" data-toggle="tooltip" title="Rabat"><span>{{ $item->cascade_discount }}</span> %</div>
-                            @endif
-                            <div class="badge badge-primary badge-lg" data-toggle="tooltip" title="Loyalty">
-                                <span>{{ $item->loyalty_points }}</span> <i class="feather icon-award"></i>
-                            </div>
-                        </div>
+                       
 					</div>
                 </div>
                 {{--<div class="wishlist">
@@ -109,7 +97,7 @@
     <div class="row">
         <div class="col-sm-12">
             <nav aria-label="pagination">
-                {{ $items->render() }}
+               
             </nav>
         </div>
     </div>

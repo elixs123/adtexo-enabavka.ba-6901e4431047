@@ -33,7 +33,7 @@
                                             <span class="navbar-toggler-icon d-block d-lg-none"><i class="feather icon-menu"></i></span>
                                         </button>
                                         <div class="search-results">
-										{{ $items->total() }} proizvoda
+										{{ 1 }} proizvoda
                                         </div>
                                     </div>
                                     <div class="view-options">

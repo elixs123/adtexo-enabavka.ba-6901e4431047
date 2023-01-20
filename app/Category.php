@@ -226,45 +226,45 @@ class Category extends BaseModel {
     */
     public function getCategoryTree($root = 1)
     {
-        $array = array();
-        $right = array();
+        // $array = array();
+        // $right = array();
         
-        $root = Category::whereId($root)->first(array('lft', 'rgt'));
+        // $root = Category::whereId($root)->first(array('lft', 'rgt'));
 
-        $categories =  Category::relation()->join('category_translations as t', 'categories.id', '=', 't.category_id')
-                        ->where('t.lang_id', '=', $this->langId)
-                        ->sIncludeIds()
-                        ->sStatus()
-                        ->whereBetween('categories.lft', array(is_null($root) ? 0 : $root->lft, is_null($root) ? 1000 : $root->rgt))
-                        ->orderBy('categories.lft', 'asc')
-                        ->orderBy('categories.priority', 'asc')
-                        ->get(array(
-                                    'categories.id',
-                                    't.name',
-                                    't.slug',
-                                    't.lang_id as lang_id',
-                                    'categories.status',
-                                    'categories.father_id',
-                                    'categories.lft',
-                                    'categories.rgt')
-                                );
-        foreach($categories as $id => $row)
-        {
-            if (count($right) > 0)
-            {
-                while (isset($right[count($right) - 1]) && ($right[count($right) - 1] < $row->rgt))
-                {
-                    array_pop($right);
-                }
-            }
+        // $categories =  Category::relation()->join('category_translations as t', 'categories.id', '=', 't.category_id')
+        //                 ->where('t.lang_id', '=', $this->langId)
+        //                 ->sIncludeIds()
+        //                 ->sStatus()
+        //                 ->whereBetween('categories.lft', array(is_null($root) ? 0 : $root->lft, is_null($root) ? 1000 : $root->rgt))
+        //                 ->orderBy('categories.lft', 'asc')
+        //                 ->orderBy('categories.priority', 'asc')
+        //                 ->get(array(
+        //                             'categories.id',
+        //                             't.name',
+        //                             't.slug',
+        //                             't.lang_id as lang_id',
+        //                             'categories.status',
+        //                             'categories.father_id',
+        //                             'categories.lft',
+        //                             'categories.rgt')
+        //                         );
+        // foreach($categories as $id => $row)
+        // {
+        //     if (count($right) > 0)
+        //     {
+        //         while (isset($right[count($right) - 1]) && ($right[count($right) - 1] < $row->rgt))
+        //         {
+        //             array_pop($right);
+        //         }
+        //     }
             
-            $row->length = count($right);
-            $row->name_length = repeater($row->length) . $row->name;
-            $array[] = $row;
-            $right[] = $row->rgt;
-        }
+        //     $row->length = count($right);
+        //     $row->name_length = repeater($row->length) . $row->name;
+        //     $array[] = $row;
+        //     $right[] = $row->rgt;
+        // }
         
-        return collect($array);
+        // return collect($array);
     }
     
     /**
