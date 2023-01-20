@@ -3,9 +3,10 @@
     <?php $scopedProduct = ScopedDocument::hasProduct($item->id); $contractProduct = ScopedContract::getProduct($item->id); $unit = is_null($item->rUnit) ? '' : $item->rUnit->name; ?>
     <div class="card ecommerce-card">
         <div class="card-content">
+            
             <div class="item-img text-center pt-0">
                 <a href="{{ url('shop/' . str_slug($item->name) . '/' . $item->id ) }}">
-                    <img class="img-fluid" src="{{ $item->photo_small }}" alt="{{ $item->name }}">
+                    <img class="img-fluid" src="{{ asset('assets/img/noimage.jpeg') }}" alt="{{ $item->name }}">
                 </a>
             </div>
             <div class="card-body">
@@ -21,15 +22,15 @@
 					</h6>
 					@endif
                     <h6 class="item-price">
-                        {{ format_price($item->price_discounted) }} {{ $currency }}
+                        {{ format_price($item->anSalePrie) }} {{ $currency }}
                     </h6>
                 </div>
                 <div class="item-name">
-                    <a href="{{ url('shop/' . str_slug($item->name) . '/' . $item->id ) }}">{{ $item->name }}</a>
+                    <a href="{{ url('shop/' . str_slug($item->name) . '/' . $item->id ) }}">{{ $item->acName }}</a>
                 </div>
-                <span class="code">Šifra: <span>{{ $item->code }}</span></span>
+                <span class="code">Šifra: <span>{{ $item->acIdent }}</span></span>
                 @if($item->barcode != '')
-                <span class="code">Barcode: <span>{{ $item->barcode }}</span></span>
+                <span class="code">Barcode: <span>{{ $item->acCode }}</span></span>
                 @endif
 				@if($item->packing != '')
 				<span class="code">Pakovanje: {{ $item->packing }}</span>
@@ -59,7 +60,7 @@
                         </h6>
 						@endif
                         <h6 class="item-price">
-                            {{ format_price($item->price_discounted, 2) }} {{ $currency }}
+                            {{ format_price($item->anSalePrice, 2) }} {{ $currency }}
                         </h6>
                     </div>
 					<div class="item-rating">

@@ -211,6 +211,7 @@ function shopDocumentCreated(response) {
 </script>
 @endsection
 
+
 @section('script-vendor')
 <script src="{{ asset('assets/app-assets/vendors/js/forms/spinner/jquery.bootstrap-touchspin.js').assetVersion() }}"></script>
 <script src="{{ asset('assets/app-assets/js/scripts/pages/app-ecommerce-shop.js').assetVersion() }}"></script>
@@ -219,7 +220,6 @@ function shopDocumentCreated(response) {
 <script src="{{ asset('assets/app-assets/vendors/js/extensions/swiper.min.js').assetVersion() }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
 @endsection
-
 @section('css-vendor')
 <link  href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
 

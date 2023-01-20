@@ -167,6 +167,17 @@
                                         </div>
                                         <hr>
                                         <div class="form-control search-result col-md-3" style="overflow: scroll;display:none;">
+                                        <table class='table table-sm table-bordered table-striped'>
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Sifra</th>
+                                                        <th scope="col">Naziv</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="search-result-table">
+                                                    
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </form>
@@ -271,16 +282,22 @@
                     if(res['products'].length > 0){
                         $(".search-result").show()
 
+                        // for(var x = 0;x < res['products'].length;x++){
+                        //     $(".search-result").append("<p value="+res['products'][x].acIdent+" anRTPrice="+res['products'][x].anSalePrice+" anWSPrice2="+res['products'][x].anWSPrice+" class='border appended-search p1 cursor-pointer' style='color: black !important;padding:5px;'>"+res['products'][x].acIdent + ' || ' +res['products'][x].acName +"</p>")
+                        // }
+
                         for(var x = 0;x < res['products'].length;x++){
-                            $(".search-result").append("<p value="+res['products'][x].acIdent+" anRTPrice="+res['products'][x].anSalePrice+" anWSPrice2="+res['products'][x].anWSPrice+" class='border appended-search p1 cursor-pointer' style='color: black !important;padding:5px;'>"+res['products'][x].acIdent + ' || ' +res['products'][x].acName +"</p>")
+                            $(".search-result-table").append("<tr value="+res['products'][x].acIdent+" anRTPrice="+res['products'][x].anSalePrice+" anWSPrice2="+res['products'][x].anWSPrice+" acName="+res['products'][x].acName+"  class='appended-search p1 cursor-pointer'><td>"+res['products'][x].acIdent+"</td><td>"+res['products'][x].acName+"</td></tr>")
                         }
+
+                        
                     }
                    $('.cursor-pointer').click(function(){
                     var anRebate2 = 0
                     var anQty = 1
 
                     $('.acIdent').val($(this).attr('value'))
-                    $('.acName').val($(this).html())
+                    $('.acName').val($(this).attr('acName'))
                     $('.anRTPrice').val($(this).attr('anRTPrice'))
                     $('.anWSPrice2').val($(this).attr('anWSPrice2'))
                     $('.anQty').val(anQty.toFixed(2))

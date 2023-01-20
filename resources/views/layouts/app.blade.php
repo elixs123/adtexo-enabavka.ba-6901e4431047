@@ -401,7 +401,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                 <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <div class="modal-content">
+                <div class="modal-content" style="width: 100vh;">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Subjekti</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">

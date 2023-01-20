@@ -63,11 +63,28 @@
                         <td class="text-right">{{round($order->anForPay * 0.145292, 2)}} KM</td>
                         <td class="text-right">{{round($order->anForPay, 2)}} KM</td>
                         @if($order->acStatus == 'N')
-                        <form action="{{route('orders')}}" method="post">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="orderNumber" value="{{$order->orderNumber}}">
-                            <td class="text-center"><button type="submit" style="border: none; background: none;"><i  class="feather icon-trash"><i></button></td>
-                        </form>
+                            <td class="text-center"><button type="button"   style="border: none; background: none;" data-toggle="modal" data-target="#deleteModal"><i  class="feather icon-trash"><i></button></td>
+                        <!-- Modal -->
+                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                                <form action="{{route('orders')}}" method="post">
+                                <input type="hidden" name="orderNumber" value="{{$order->orderNumber}}">
+                                    {{ csrf_field() }}
+                                    <button class="btn btn-primary" type="submit">Izbrisi</button>
+                                </form>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
                         @endif
                     </tr>
                     @empty
@@ -79,6 +96,8 @@
                 </table>
             </div>
         </div>
+
+        
     </div>
     <!-- end: content body -->
 @endsection
