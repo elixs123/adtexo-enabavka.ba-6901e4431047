@@ -24,6 +24,22 @@ use Illuminate\Http\Request;
 class DocumentController extends Controller
 {
 
+    use DocumentHelper, ActionHelper;
+    
+    /**
+     * @var \App\Document
+     */
+    private $document;
+
+    /**
+     * @var \App\Client
+     */
+    private $client;
+    
+    /**
+     * @var \App\User
+     */
+    private $user;
     
     /**
      * DocumentController constructor.
@@ -32,9 +48,17 @@ class DocumentController extends Controller
      * @param \App\Client $client
      * @param \App\User $user
      */
-    public function __construct()
+    public function __construct(Document $document, Client $client, User $user)
 	{
-        
+        $this->document = $document;
+        $this->client = $client;
+        $this->user = $user;
+
+        $this->middleware('auth');
+        $this->middleware('emptystringstonull');
+        $this->middleware('acl:view-document', ['only' => ['index']]);
+        $this->middleware('acl:create-document', ['only' => ['create', 'store']]);
+        $this->middleware('acl:edit-document', ['only' => ['edit', 'update']]);
     }
     
     /**

@@ -109,7 +109,7 @@ class ShopController extends Controller
             $this->product->productIds =  ScopedDocument::scopedProducts()->pluck('id')->toArray();
         }
         
-        $items = Product::all();
+        $items = Product::with('stock')->paginate(10);
 		
         if($export == 'pdf') {
             return $this->exportToPDF($items);
@@ -155,13 +155,13 @@ class ShopController extends Controller
             $this->product->productIds =  ScopedDocument::scopedProducts()->pluck('id')->toArray();
         }
         
-        $items = $this->product->getAll();
-
+       // $items = $this->product->getAll();
+        $items = Product::all();
         foreach ($items as $v) {
 		
             $return[] = [
-                'value' => $v->code . ' ' .html_entity_decode($v->name),
-                'data' => url('shop/' . str_slug($v->name) . '/' . $v->id )
+                'value' => $v->acCode . ' ' .html_entity_decode($v->acName),
+                'data' => url('shop/' . str_slug($v->acName) . '/' . $v->acIdent )
             ];
         }
 
@@ -180,8 +180,9 @@ class ShopController extends Controller
     public function getProductShow($title, $id)
     {
         $item = $this->product->getOne($id);
+        $item = Product::find($id);
 		
-		if(!isset($item->id))
+		if(!isset($item->acIdent))
 		{
 			return redirect('/shop');
 		}

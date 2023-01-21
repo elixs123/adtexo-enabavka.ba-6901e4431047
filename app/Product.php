@@ -18,4 +18,8 @@ class Product extends BaseModel
     protected $fillable = [
         //'acName'
     ];
+
+    public function stock(){
+        return $this->belongsTo(The_Stock::class, 'acIdent', 'acIdent');
+    }
 }

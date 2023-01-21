@@ -32,35 +32,20 @@
                             <div class="row mb-5 mt-2">
                                 <div class="col-12 col-md-5 mb-2 mb-md-0">
 										<div data-fit="scaledown" data-nav="thumbs" data-width="100%" data-ratio="600/600" data-maxwidth="600"  class="fotorama">
-											<img src="{{ $item->photo_big }}" class="img-fluid" alt="{{ $item->name }}">
+											<img src="{{ asset('assets/img/noimage.jpeg') }}" class="img-fluid" alt="">
 											@foreach($gallery as $photo_item)
-											<img src="/assets/photos/gallery/big/{{ $photo_item->name }}" alt="" />
+											<img src="" alt="" />
 											@endforeach
-											@if($item->video != '')
-											<a href="{{ $item->video }}">Celestial Dynamics</a>
-											@endif
 										</div>
                                 </div>
                                 <div class="col-12 col-md-6">
-									<p class="text-muted">{{ $item->brand->name }}</p>
+									<p class="text-muted">Ime branda</p>
                                     <h5>{{ $item->name }}</h5>
-                                    <p class="text-muted">Šifra: {{ $item->code }} @if($item->barcode != '') Barcode: {{ $item->barcode }} @endif</p>
+                                    <p class="text-muted">Šifra: {{$item->acIdent}}</p>
 									<hr>
                                     <div class="ecommerce-details-price d-flex flex-wrap">
-                                        @if($item->has_discount)
-                                        <p class="font-medium-3 mr-1 mb-0 item-price old">{{ format_price($item->price_old, 2) }} {{ $currency }}</p>
-                                        @endif
-                                        <p class="text-primary font-medium-3 mr-1 mb-0">{{ format_price($item->price_discounted, 2) }} {{ $currency }}</p>
-                                        @if($item->has_discount && (!ScopedDocument::exist() || (ScopedDocument::exist() && !ScopedDocument::isReturn())))
-                                        <div class="badge badge-success badge-md mr-1">
-                                            <span class="text-uppercase"><small>{{ $item->cascade_discount }}</small> %</span>
-                                        </div>
-                                        @endif
-										@if($item->price->badge_id)
-										<div class="badge badge-md mr-1" style="background-color: {{ $item->price->rBadge->background_color }};color: {{ $item->price->rBadge->color }};">
-											<span class="text-uppercase">{{ $item->price->rBadge->name }}</span>
-										</div>
-										@endif
+                                        <p class="text-primary font-medium-3 mr-1 mb-0">{{ format_price($item->anSalePrice, 2) }} {{ $currency }}</p>
+                                        
 
 										<span class="badge badge-primary badge-md"><small>{{ $item->loyalty_points }}</small> <i class="feather icon-award"></i></span>
                                     </div>
@@ -165,7 +150,7 @@
                                     <div style="background-color: #fff" class="swiper-slide rounded swiper-shadow">
                                         <div class="item-heading">
                                             <p class="text-truncate mb-0">
-											{{ $product->name }}
+											{{ $product->acName }}
                                             </p>
                                             <p>
                                                 <small>{{ $product->brand->name }}</small>

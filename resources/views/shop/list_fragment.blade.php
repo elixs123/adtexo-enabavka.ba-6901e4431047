@@ -45,7 +45,7 @@
                 <span class="code"><span class="badge badge-info text-uppercase">Ugovoreno: {{ $contractProduct->qty }} {{ $unit }}</span> / <span class="badge badge-danger text-uppercase">Kupljeno: {{ $contractProduct->bought }} {{ $unit }}</span></span>
                 @endif
                 @if(!userIsClient())
-				<span class="stock-in">Zaliha: <span>{{ $item->qty }} {{ $unit }}</span></span>
+				<span class="stock-in">Zaliha: <span>{{ round($item->stock['anStock'], 8) }} {{ $unit }}</span></span>
                 @endif
 				@if(isset($item->ordered))
 				<span style="color: #7367F0" class="stock-in">Naručivano: <span>{{ $item->ordered }} {{ is_null($item->rUnit) ? '' : $item->rUnit->name }}</span></span>
@@ -60,7 +60,10 @@
                         </h6>
 						@endif
                         <h6 class="item-price">
-                            {{ format_price($item->anSalePrice, 2) }} {{ $currency }}
+                            MPC: {{ format_price($item->anSalePrice, 2) }} {{ $currency }}
+                            <br>
+                            <br>
+                            VPC: {{ format_price($item->anWSPrice, 2) }} {{ $currency }}
                         </h6>
                     </div>
 					<div class="item-rating">
@@ -71,17 +74,14 @@
                     <!--<i class="fa fa-heart-o mr-25"></i> Wishlist-->
                 </div>--}}
                 <div class="qty">
-                    @if(ScopedDocument::isReturn() || ScopedDocument::isPreOrder() || ($item->qty > 0))
-                        @if(ScopedDocument::exist())
-                        <div class="input-group quantity-counter-wrapper">
-                            <input class="add-to-basket quantity-counter" type="number" autocomplete="off" data-max="{{ (ScopedDocument::isReturn() || ScopedDocument::isPreOrder()) ? 1000 : $item->qty }}" id="product_quantity_{{ $item->id }}" data-product-id="{{ $item->id }}" data-document-type="{{ ScopedDocument::typeId() }}" data-min="{{ $min_qty = ScopedDocument::getProductMinQty($item->id) }}" name="qty" placeholder="0" value="{{ isset($scopedProduct->qty) ? $scopedProduct->qty : '' }}">
-                        </div>
-                        @else
-                        <input class="choose-document" type="number" name="qty" placeholder="0" min="0" value="0" title="Izaberi dokument" data-tooltip data-toggle="modal" data-target="#form-modal1" data-href="{{ route('document.draft.index') }}" readonly>
-                        @endif
-                    @else
-                        Nema na zalihama
-                    @endif
+                    <div class="">
+               
+                        <button type="button" class="btn btn-primary bootstrap-touchspin-down" style="padding: 0;min-width: 22px; min-height: 22px;border-radius: 5px !important;position: relative;">-</button>
+                        <input type="text" value="1"  style="padding: 0;min-width: 22px; min-height: 22px;border-radius: 5px !important;position: relative; background: none;">
+                        <button type="button" class="btn btn-primary bootstrap-touchspin-up"  style="padding: 0;min-width: 22px; min-height: 22px;border-radius: 5px !important;position: relative;">+</button>
+                    </div>
+                        
+                        
                 </div>
                 @if((isset($min_qty)) && ($min_qty > 0))
                 <small class="text-center d-block"><strong>Min. količina {{ $min_qty }}</strong></small>

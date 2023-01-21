@@ -33,6 +33,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
 
         <div class="content-overlay"></div>
         <div class="header-navbar-shadow"></div>
+        @if(1==2)
         <nav class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-light navbar-shadow">
             <div class="navbar-wrapper">
                 <div class="navbar-container content">
@@ -181,6 +182,157 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                 </div>
             </div>
         </nav>
+        @else
+        <nav class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-light navbar-shadow">
+            <div class="navbar-wrapper">
+                <div class="navbar-container content">
+                    <div class="navbar-collapse" id="navbar-mobile">
+                        <div class="mr-auto float-left bookmark-wrapper d-flex align-items-center">
+                            <ul class="nav navbar-nav">
+                                <li class="nav-item mobile-menu d-xl-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ficon feather icon-menu"></i></a></li>
+                            </ul>
+                           
+                            <ul class="nav navbar-nav bookmark-icons d-none d-lg-block d-xl-block">
+                                <li class="nav-item">
+                                    <a class="nav-link header-document-info d-flex" href="{{ route('document.show', [ScopedDocument::id()]) }}" data-toggle="tooltip" title="{{ trans('document.actions.show') }}">
+                                        <i class="ficon feather icon-file" style="color: green"></i>
+                                        <span>
+                                            <small>muamerhodzic@gmail.com</small><br>
+                                            <strong>Narudžba: #2224</strong>
+                                        </span>
+                                        <span>| <strong data-document-subtotal class="badge" style="background-color: {{ ScopedDocument::backgroundColor() }}">200.00</strong> | <strong data-document-total-items>{{ ScopedDocument::totalItems() }}</strong> proizvoda</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            
+                        </div>
+                        <ul class="nav navbar-nav float-right">
+                            <!-- start: language -->
+                            <li class="dropdown dropdown-language nav-item">
+                                <a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    @if(session('db_name') == 'ba')
+                                    <i class="flag-icon flag-icon-ba"></i>
+                                    
+                                        <span class="menu-title">Bosna i Hercegovina</span>
+                                    @elseif(session('db_name') == 'rs')
+                                    <i class="flag-icon flag-icon-rs"></i>
+                                        <span class="menu-title">Srbija</span>
+                                    @else
+                                    <i class="flag-icon flag-icon-hr"></i>
+                                        <span class="menu-title">Hrvatska</span>
+                                    @endif
+                                </a>
+                            </li>
+                            <!-- end: language -->
+                            <!-- start: full screen -->
+                            <li class="dropdown dropdown-shortcuts nav-item">
+                                
+                                <a class="dropdown-toggle nav-link" id="dropdown-shortcuts" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="feather icon-plus"></i>
+                                </a>
+
+                                
+
+
+                                <div class="dropdown-menu" aria-labelledby="dropdown-shortcuts">
+                                    <a class="dropdown-item"  type="button" class="btn btn-primary" data-toggle="modal" data-target="#shopModal"><i class="feather icon-file"></i> Nova narudžba</a>
+                                        
+                                </div>
+
+                                
+                            </li>
+                            <!-- end: full screen -->
+                            @if(false)
+                            <!-- start: notifications -->
+                            <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" href="#" data-toggle="dropdown"><i class="ficon feather icon-bell"></i><span class="badge badge-pill badge-primary badge-up">5</span></a>
+                                <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
+                                    <li class="dropdown-menu-header">
+                                        <div class="dropdown-header m-0 p-2">
+                                            <h3 class="white">5 New</h3><span class="grey darken-2">App Notifications</span>
+                                        </div>
+                                    </li>
+                                    <li class="scrollable-container media-list">
+                                        <a class="d-flex justify-content-between" href="javascript:void(0)">
+                                            <div class="media d-flex align-items-start">
+                                                <div class="media-left"><i class="feather icon-plus-square font-medium-5 primary"></i></div>
+                                                <div class="media-body">
+                                                    <h6 class="primary media-heading">You have new order!</h6><small class="notification-text"> Are your going to meet me tonight?</small>
+                                                </div><small>
+                                                    <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">9 hours ago</time></small>
+                                            </div>
+                                        </a>
+                                        <a class="d-flex justify-content-between" href="javascript:void(0)">
+                                            <div class="media d-flex align-items-start">
+                                                <div class="media-left"><i class="feather icon-download-cloud font-medium-5 success"></i></div>
+                                                <div class="media-body">
+                                                    <h6 class="success media-heading red darken-1">99% Server load</h6><small class="notification-text">You got new order of goods.</small>
+                                                </div><small>
+                                                    <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">5 hour ago</time></small>
+                                            </div>
+                                        </a>
+                                        <a class="d-flex justify-content-between" href="javascript:void(0)">
+                                            <div class="media d-flex align-items-start">
+                                                <div class="media-left"><i class="feather icon-alert-triangle font-medium-5 danger"></i></div>
+                                                <div class="media-body">
+                                                    <h6 class="danger media-heading yellow darken-3">Warning notifixation</h6><small class="notification-text">Server have 99% CPU usage.</small>
+                                                </div><small>
+                                                    <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">Today</time></small>
+                                            </div>
+                                        </a><a class="d-flex justify-content-between" href="javascript:void(0)">
+                                            <div class="media d-flex align-items-start">
+                                                <div class="media-left"><i class="feather icon-check-circle font-medium-5 info"></i></div>
+                                                <div class="media-body">
+                                                    <h6 class="info media-heading">Complete the task</h6><small class="notification-text">Cake sesame snaps cupcake</small>
+                                                </div><small>
+                                                    <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">Last week</time></small>
+                                            </div>
+                                        </a><a class="d-flex justify-content-between" href="javascript:void(0)">
+                                            <div class="media d-flex align-items-start">
+                                                <div class="media-left"><i class="feather icon-file font-medium-5 warning"></i></div>
+                                                <div class="media-body">
+                                                    <h6 class="warning media-heading">Generate monthly report</h6><small class="notification-text">Chocolate cake oat cake tiramisu marzipan</small>
+                                                </div><small>
+                                                    <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">Last month</time></small>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="dropdown-menu-footer"><a class="dropdown-item p-1 text-center" href="javascript:void(0)">Read all notifications</a></li>
+                                </ul>
+                            </li>
+                            <!-- end: notifications -->
+                            @endif
+                            <!-- start: user -->
+                            <li class="dropdown dropdown-user nav-item">
+                                <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
+                                    <div class="user-nav d-sm-flex d-none">
+                                        <span class="user-name text-bold-600">{{ Auth::user()->email}}</span>
+                                        <span class="user-status">{{ implode(', ', auth()->user()->roles->pluck('name')->toArray()) }}</span>
+                                    </div>
+                                    <span><img class="round" src="@if(auth()->user()->photo != ''){{ asset('assets/pictures/user/small_' . auth()->user()->photo) }}@else{{ asset('assets/img/no_photo.jpg') }}@endif" alt="avatar" height="40" width="40"></span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" data-toggle="modal" data-target="#form-modal1" data-href="{{ route('user.edit', [auth()->id()]) }}"><i class="feather icon-user"></i> {{ trans('profile.actions.edit') }}</a>
+                                    @if(Session::get('real_user_id') && (Auth::user()->id != Session::get('real_user_id')))
+                                    <a class="dropdown-item" href="{{ url('/user/login-as-real-user') }}"><i class="feather icon-unlock"></i>{{ trans('skeleton.login_back') }}</a>
+                                    @endif
+
+                                    @if(false)
+                                    <a class="dropdown-item" href="#"><i class="feather icon-mail"></i> My Inbox</a>
+                                    <a class="dropdown-item" href="#"><i class="feather icon-check-square"></i> Task</a>
+                                    <a class="dropdown-item" href="#"><i class="feather icon-message-square"></i> Chats</a>
+                                    @endif
+                                    <!--<div class="dropdown-divider"></div>-->
+                                    <a class="dropdown-item" href="{{ route('logout') }}"><i class="feather icon-power"></i> {{ trans('profile.actions.logout') }}</a>
+                                </div>
+                            </li>
+                            <!-- end: user -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- end: header -->
+        @endif
         <!-- end: header -->
         
         <!-- start: main menu -->
@@ -450,6 +602,31 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
             </div>
         </div>
         <!--END MODAL -->
+        <!--SHOP MODAL -->
+        <div class="modal fade" id="shopModal" tabindex="-1" aria-labelledby="shopModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="width: 100vh;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="shopModalLabel">Subjekti za shop</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text"  name="search" class="searchSubjectShop form-control" placeholder="Upisite subjekta">
+
+                    <div class="search-result-subject" style="overflow: scroll;display:none;">
+                        
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!-- END SHOP MODAL-->
                 @if($scoped_header)
                 <div class="alert alert-info d-lg-none d-xl-none">
                     <a href="{{ route('document.show', [ScopedDocument::id()]) }}" title="{{ trans('document.actions.show') }}" data-toggle="tooltip">
@@ -529,6 +706,38 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                     if(res.length > 0){
                         for(var x = 0;x < res.length;x++){
                             $(".search-result-subject").append("<a href="+location.origin+"/createorder?acSubject="+res[x].acSubject+" class='border appended-search-subject p1 cursor-pointer' style='color: black !important;padding:5px;'>"+res[x].acName2 + '||' +res[x].acAddress +"</a>")
+                        }
+                    }
+                },
+                error:function(error)
+                {
+                }
+            });
+        })
+
+        $(".searchSubjectShop").keyup(function(){
+            if(this.value.length < 1){
+                $(".search-result-subject").hide()
+                $(".appended-search-subject").remove()
+                return false
+            }
+
+            $(".search-result-subject").hide()
+            $(".appended-search-subject").remove()
+            $.ajax({
+                type: "GET",
+                url: location.origin+"/api/ba/subjects/search",
+                data:{
+                    search: this.value
+                },
+                success: function(res){
+                    $(".appended-search-subject").remove()
+                    $(".search-result-subject").css('height', '250px')
+                    $(".search-result-subject").css('display', 'grid')
+
+                    if(res.length > 0){
+                        for(var x = 0;x < res.length;x++){
+                            $(".search-result-subject").append("<a href='' class='border appended-search-subject p1 cursor-pointer' style='color: black !important;padding:5px;'>"+res[x].acName2 + '||' +res[x].acAddress +"</a>")
                         }
                     }
                 },
