@@ -1,13 +1,14 @@
 <section id="ecommerce-products" class="list-view">
+    
     @foreach($items as $item)
     <?php $scopedProduct = ScopedDocument::hasProduct($item->id); $contractProduct = ScopedContract::getProduct($item->id); $unit = is_null($item->rUnit) ? '' : $item->rUnit->name; ?>
     <div class="card ecommerce-card">
         <div class="card-content">
             
             <div class="item-img text-center pt-0">
-                <a href="{{ url('shop/' . str_slug($item->name) . '/' . $item->id ) }}">
+               
                     <img class="img-fluid" src="{{ asset('assets/img/noimage.jpeg') }}" alt="{{ $item->name }}">
-                </a>
+                
             </div>
             <div class="card-body">
                 <div class="item-wrapper">
@@ -26,7 +27,7 @@
                     </h6>
                 </div>
                 <div class="item-name">
-                    <a href="{{ url('shop/' . str_slug($item->name) . '/' . $item->id ) }}">{{ $item->acName }}</a>
+                    {{ $item->acName }}
                 </div>
                 <span class="code">Šifra: <span>{{ $item->acIdent }}</span></span>
                 @if($item->barcode != '')
@@ -60,6 +61,7 @@
                         </h6>
 						@endif
                         <h6 class="item-price">
+                            
                             MPC: {{ format_price($item->anSalePrice, 2) }} {{ $currency }}
                             <br>
                             <br>
@@ -74,13 +76,32 @@
                     <!--<i class="fa fa-heart-o mr-25"></i> Wishlist-->
                 </div>--}}
                 <div class="qty">
-                    <div class="">
-               
-                        <button type="button" class="btn btn-primary bootstrap-touchspin-down" style="padding: 0;min-width: 22px; min-height: 22px;border-radius: 5px !important;position: relative;">-</button>
-                        <input type="text" value="1"  style="padding: 0;min-width: 22px; min-height: 22px;border-radius: 5px !important;position: relative; background: none;">
-                        <button type="button" class="btn btn-primary bootstrap-touchspin-up"  style="padding: 0;min-width: 22px; min-height: 22px;border-radius: 5px !important;position: relative;">+</button>
-                    </div>
-                        
+                    @if(count($order))
+                        @if($item->stock['anStock'] > 0)
+                        <div class="">
+                            <form action="{{route('addToShop')}}" method="POST">
+                                {{ csrf_field() }}
+                                <input type="hidden" name="acIdent" value="{{$item->acIdent}}">
+                                <input type="hidden" name="anRTPrice" value="{{$item->anRTPrice}}">
+                                <input type="hidden" name="anWSPrice2" value="{{$item->anWSPrice2}}">
+                                <input type="hidden" name="acWayOfSale" value="Z">
+                                <input type="hidden" name="anRebate1" value="0">
+                                <input type="hidden" name="orderNumber" value="{{$order->orderNumber}}">
+                                <input type="hidden" name="anRebate2" value="0">
+                                <input type="hidden" name="anRebate3" value="0">
+                            
+                                <input type="hidden" name="anNo">
+                                <button type="submit" class="btn btn-primary bootstrap-touchspin-down" style="padding: 0;min-width: 22px; min-height: 22px;border-radius: 5px !important;position: relative;" name="buttonMinus">-</button>
+                                <input type="text" value="1" name="anQty"  style="padding: 0;min-width: 22px; min-height: 22px;border-radius: 5px !important;position: relative; background: none;">
+                                <button type="submit" class="btn btn-primary bootstrap-touchspin-up"  style="padding: 0;min-width: 22px; min-height: 22px;border-radius: 5px !important;position: relative;" name="buttonPlus">+</button>
+                            </form>
+                        </div>
+                        @else
+                        <div>
+                            <h4>Nema na zalihi</h4>
+                        </div>
+                        @endif
+                    @endif
                         
                 </div>
                 @if((isset($min_qty)) && ($min_qty > 0))

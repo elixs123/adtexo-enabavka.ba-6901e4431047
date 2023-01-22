@@ -6,6 +6,12 @@ use App\Product;
 use App\Brand;
 use App\Category;
 use App\Photo;
+use App\The_OrderItem;
+use App\The_Order;
+use App\Subject;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use DB;
 use App\Support\Scoped\ScopedContractFacade as ScopedContract;
 use App\Support\Scoped\ScopedDocumentFacade as ScopedDocument;
 use App\Support\Scoped\ScopedStockFacade as ScopedStock;
@@ -61,8 +67,17 @@ class ShopController extends Controller
         $this->middleware('acl:view-shop');
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $order = [];
+        if($request->has('acSubject')){
+           $orderId =  $this->createOrder($request->input('acSubject'));
+
+           $order = The_Order::with('items')->where('id', $orderId)->firstOrFail();
+           
+        }
+
+
         ScopedContract::setDocument(ScopedDocument::getDocument());
         
         $export = request('export', false);
@@ -119,13 +134,136 @@ class ShopController extends Controller
         
         $view = isset($_SERVER["HTTP_X_PJAX"]) ? 'shop.list_fragment' : 'shop.list';
 
+        
         return view($view, array(
             'body_class' => 'ecommerce-application',
             'categories' => $categories,
             'items' => $items,
             'brands' => $brands,
+            'order' => $order,
             'currency' => ScopedStock::currency(),
         ));
+    }
+
+    public function finishOrder($order){
+        The_Order::where('id', $order)->update([
+            'acStatus' => 'R'
+        ]);
+
+        return redirect()->route('shop.index');
+    }
+
+    public function createOrder($acSubject){
+        $order = The_Order::where('acSubject', $acSubject)
+                        ->where('acStatus', 'N')        
+                        ->get();
+
+        if($order->isEmpty()){
+            $subject = Subject::where('acSubject', $acSubject)->first();
+    
+            $acPayer = Subject::where('acSubject', $subject->acPayer)->first();
+
+            
+
+            $order = new The_Order;
+            $order->acSubject = $subject->acSubject;
+            $order->acStatus = 'N';
+            $order->anDaysForValid = Carbon::now()->addDay(5);
+            $order->acPayer = $acPayer->acSubject;
+            $order->acPayerName = $acPayer->acName2;
+            $order->save();
+
+            $order->orderNumber = '#'.sprintf("%06d", $order->id).'/'.date('y');
+            $order->save();
+
+            return $order->id;     
+        }
+
+        return $order[0]->id;
+
+              
+    }
+
+    public function addProduct(Request $request){
+       
+        if($request->has('acWayOfSale') == 'Z'){
+           
+            $anPrice = $request->input('anWSPrice2');
+            $rebate1 = ((float) $request->input('anWSPrice2')) - ((float) $request->input('anWSPrice2')  * (float) $request->input('anRebate1') / 100);
+        }else{
+            $anPrice  = $request->input('anRTPrice');
+            $rebate1 = ((float) $request->input('anRTPrice') )  - ((float) $request->input('anRTPrice')  *((float) $request->input('anRebate1') / 100));
+        }
+
+       
+
+        $rebate2 = $rebate1 - ($rebate1 * ((float) $request->input('anRebate2') / 100));
+        $rebate3 = $rebate2 - ($rebate2 * ((float) $request->input('anRebate3') / 100));
+
+        $anForPay = $rebate3;
+
+        $orderItem = The_OrderItem::where('orderNumber', $request->input('orderNumber'))
+                                  //  ->where('acIdent', $request->input('acIdent'))
+                                    ->first();
+       if(!isset($orderItem)){
+        $anNo = 1;
+       }else{
+        $anNo = $orderItem->anNo+1;
+       }
+
+       $orderCheck = The_OrderItem::where('orderNumber', $request->input('orderNumber'))
+          ->where('acIdent', $request->input('acIdent'))
+          ->first();
+       
+       if($request->has('buttonPlus')){
+
+        
+
+          if(isset($orderCheck)){
+            The_OrderItem::where('orderNumber', $request->input('orderNumber'))
+                ->where('acIdent', $request->input('acIdent'))
+                ->update([
+                'anQty' =>  $orderCheck->anQty + (float )$request->input('anQty'),
+            ]);
+          }else{
+            The_OrderItem::insert([
+                'acIdent' => $request->input('acIdent'),
+                'anPrice' => $anPrice,
+                'anQty' => $request->input('anQty'),
+                'anRebate1' => $request->input('anRebate1'),
+                'orderNumber' => $request->input('orderNumber'),
+                'anRebate2' => $request->input('anRebate2'),
+                'anRebate3' => $request->input('anRebate3'),
+                'anForPay' => $anForPay,
+                'anNo' => $anNo,
+           ]);
+          }
+            
+        }
+
+        if($request->has('buttonMinus')){
+            if(isset($orderCheck)){
+
+                if($orderCheck->anQty < 1){
+                    return redirect()->back()->with('alert', 'Kolicina ne moze ici ispod 0.');
+                }
+                The_OrderItem::where('orderNumber', $request->input('orderNumber'))
+                    ->where('acIdent', $request->input('acIdent'))
+                    ->update([
+                    'anQty' =>  $orderCheck->anQty - (float )$request->input('anQty'),
+                ]);
+            }
+
+        }
+
+        $sumAnForPay = The_OrderItem::where('orderNumber', $request->input('orderNumber'))->sum(DB::raw('anForPay * anQty'));
+
+        The_Order::where('orderNumber', $request->input('orderNumber'))->update([
+            'anForPay' => $sumAnForPay
+        ]);
+       
+
+       return redirect()->back();
     }
 	
     /**

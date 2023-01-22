@@ -22,4 +22,8 @@ class Product extends BaseModel
     public function stock(){
         return $this->belongsTo(The_Stock::class, 'acIdent', 'acIdent');
     }
+
+    public function orderItem(){
+        return $this->belongsTo(The_OrderItem::class, 'acIdent', 'acIdent');
+    }
 }

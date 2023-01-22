@@ -67,6 +67,11 @@ Route::group(['middleware' => ['auth', 'acl', 'emptystringstonull', 'user.person
 
     Route::get('/orders', 'DocumentController@index')->name('orders');
     Route::post('/orders', 'DocumentController@delete');
+
+    Route::get('shop', 'ShopController@index')->name('shop.index');
+    Route::post('shop', 'ShopController@addProduct')->name('addToShop');
+    Route::get('shop/order/{order}', 'ShopController@finishOrder')->name('finishorder');
+
     /*
     |--------------------------------------------------------------------------
     | Invoicing Routes
@@ -171,7 +176,7 @@ Route::group(['middleware' => ['auth', 'acl', 'emptystringstonull', 'user.person
     */
 	Route::get('shop/{title}/{id}', 'ShopController@getProductShow')->name('shop.product');
 	Route::get('shop/autocomplete', 'ShopController@autocomplete')->name('shop.autocomplete');
-	Route::get('shop', 'ShopController@index')->name('shop.index');
+	
 
     /*
     |--------------------------------------------------------------------------

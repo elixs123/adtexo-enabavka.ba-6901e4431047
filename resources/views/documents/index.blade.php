@@ -167,7 +167,7 @@
                                         </div>
                                         <hr>
                                         <div class="form-control search-result col-md-3" style="overflow: scroll;display:none;">
-                                        <table class='table table-sm table-bordered table-striped'>
+                                            <table class='table table-sm table-bordered table-striped'>
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">Sifra</th>

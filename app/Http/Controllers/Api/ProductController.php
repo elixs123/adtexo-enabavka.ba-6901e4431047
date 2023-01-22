@@ -91,8 +91,12 @@ class ProductController extends Controller
     }
 
     public function search(Request $request){
-        $data['products'] = Product::where($request->input('searchName'), 'like', '%' . $request->input('search') . '%')->get();
-        $data['acSubject'] = Subject::where('acSubject', $request->input('acSubject'))->get();
+        $data['products'] = Product::where('acName', 'like', '%' . $request->input('search') . '%')->get();
+        
+        if($request->has('acSubject')){
+            $data['acSubject'] = Subject::where('acSubject', $request->input('acSubject'))->get();
+        }
+       
         return $data;
     }
 

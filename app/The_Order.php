@@ -12,4 +12,8 @@ class The_Order extends Model
     public function subject(){
         return $this->belongsTo(Subject::class, 'acSubject', 'acSubject');
     }
+
+    public function items(){
+        return $this->hasMany(The_OrderItem::class, 'orderNumber', 'orderNumber');
+    }
 }

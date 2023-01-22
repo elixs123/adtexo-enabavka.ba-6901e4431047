@@ -57,7 +57,9 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                             </ul>
                             @endif
                         </div>
+                        
                         <ul class="nav navbar-nav float-right">
+                            
                             <!-- start: language -->
                             <li class="dropdown dropdown-language nav-item">
                                 <a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -192,18 +194,22 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                                 <li class="nav-item mobile-menu d-xl-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ficon feather icon-menu"></i></a></li>
                             </ul>
                            
-                            <ul class="nav navbar-nav bookmark-icons d-none d-lg-block d-xl-block">
-                                <li class="nav-item">
-                                    <a class="nav-link header-document-info d-flex" href="{{ route('document.show', [ScopedDocument::id()]) }}" data-toggle="tooltip" title="{{ trans('document.actions.show') }}">
-                                        <i class="ficon feather icon-file" style="color: green"></i>
-                                        <span>
-                                            <small>muamerhodzic@gmail.com</small><br>
-                                            <strong>Narudžba: #2224</strong>
-                                        </span>
-                                        <span>| <strong data-document-subtotal class="badge" style="background-color: {{ ScopedDocument::backgroundColor() }}">200.00</strong> | <strong data-document-total-items>{{ ScopedDocument::totalItems() }}</strong> proizvoda</span>
-                                    </a>
-                                </li>
-                            </ul>
+                            @if(isset($order))
+                                @if(count($order) > 0)
+                                <ul class="nav navbar-nav bookmark-icons d-none d-lg-block d-xl-block">
+                                    <li class="nav-item">
+                                        <a class="nav-link header-document-info d-flex" href="{{ route('document.show', [ScopedDocument::id()]) }}" data-toggle="tooltip" title="{{ trans('document.actions.show') }}">
+                                            <i class="ficon feather icon-file" style="color: green"></i>
+                                            <span>
+                                                <small>muamerhodzic@gmail.com</small><br>
+                                                <strong>Narudžba: {{$order->orderNumber}}</strong>
+                                            </span>
+                                            <span>| <strong data-document-subtotal class="badge" style="background-color: ">{{$order->anForPay}}</strong> | <strong data-document-total-items>{{$order->items->count('anQty')}}</strong> proizvoda</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                @endif
+                            @endif
                             
                         </div>
                         <ul class="nav navbar-nav float-right">
@@ -334,7 +340,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
         <!-- end: header -->
         @endif
         <!-- end: header -->
-        
+       
         <!-- start: main menu -->
         <div class="main-menu menu-fixed menu-dark menu-accordion menu-shadow" data-scroll-to-active="true">
             <div class="navbar-header">
@@ -616,8 +622,20 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                     <input type="text"  name="search" class="searchSubjectShop form-control" placeholder="Upisite subjekta">
 
                     <div class="search-result-subject" style="overflow: scroll;display:none;">
-                        
+                        <table class='table table-sm table-bordered table-striped'>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Sifra</th>
+                                    <th scope="col">Naziv</th>
+                                </tr>
+                            </thead>
+                            <tbody class="search-result-table">
+                                
+                            </tbody>
+                        </table>
                     </div>
+
+                   
                     
                 </div>
                 <div class="modal-footer">
@@ -643,17 +661,23 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
         <div class="sidenav-overlay"></div>
         <div class="drag-target"></div>
         <!-- start: footer -->
-        <footer class="footer footer-light @if($scoped_footer){{ 'text-right' }}@endif">
-            @if($scoped_footer)
-            <a href="{{ route('document.draft.complete') }}" class="btn btn-{{ ScopedDocument::typeId() }}" data-scoped-document-complete><span class="feather icon-check"></span> {{ trans('document.actions.complete.'.ScopedDocument::typeId()) }}</a>
-            <a href="{{ route('document.close') }}" class="btn btn-outline-black" data-scoped-document-close><span class="feather icon-x"></span> {{ trans('document.actions.close') }}</a>
-                @else
-            <p class="clearfix blue-grey lighten-2 mb-0">
-                <span class="float-md-left d-block d-md-inline-block mt-25">COPYRIGHT &copy; {{ now()->format('Y') }}<a class="text-bold-800 grey darken-2" href="https://enabavka.ba" target="_blank" rel="noopener">enabavka.ba,</a>All rights Reserved</span><span class="float-md-right d-none d-md-block">Hand-crafted & Made with<i class="feather icon-heart pink"></i></span>
-                <button class="btn btn-primary btn-icon scroll-top" type="button"><i class="feather icon-arrow-up"></i></button>
-            </p>
+        @if(isset($order))
+        
+            @if(count($order))
+            <footer class="footer footer-light fixed-footer @if(count($order)){{ 'text-right' }}@endif" style="position: fixed;height: 58px; background: #fff;bottom: 0; width: 100%;margin-top: 50px;">
+                
+                <a href="{{ route('finishorder', ['order' => $order->id]) }}" class="btn btn-success" style="margin-right: 36px;"><span class="feather icon-check"></span> Završi narudžbu</a>
+                
+                <a href="{{ route('document.close') }}" class="btn btn-outline-black"><span class="feather icon-x"></span> Zatvori dokument</a>
+                    
+                <p class="clearfix blue-grey lighten-2 mb-0">
+                    <span class="float-md-left d-block d-md-inline-block mt-25">COPYRIGHT &copy; {{ now()->format('Y') }}<a class="text-bold-800 grey darken-2" href="https://enabavka.ba" target="_blank" rel="noopener">enabavka.ba,</a>All rights Reserved</span><span class="float-md-right d-none d-md-block">Hand-crafted & Made with<i class="feather icon-heart pink"></i></span>
+                    <button class="btn btn-primary btn-icon scroll-top" type="button"><i class="feather icon-arrow-up"></i></button>
+                </p>
+            
+            </footer>
             @endif
-        </footer>
+        @endif
         <!-- end: footer -->
         @include('partials.modal_placeholder')
         <!-- start: loader -->
@@ -735,10 +759,17 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                     $(".search-result-subject").css('height', '250px')
                     $(".search-result-subject").css('display', 'grid')
 
+
                     if(res.length > 0){
                         for(var x = 0;x < res.length;x++){
-                            $(".search-result-subject").append("<a href='' class='border appended-search-subject p1 cursor-pointer' style='color: black !important;padding:5px;'>"+res[x].acName2 + '||' +res[x].acAddress +"</a>")
+                            /*$(".search-result-subject").append("<a href="+location.origin+"/shop?acSubject="+res[x].acSubject+" class='border appended-search-subject p1 cursor-pointer' style='color: black !important;padding:5px;'>"+res[x].acName2 + '||' +res[x].acAddress +"</a>")*/
+
+                            $(".search-result-table").append("<tr class='appended-search p1 cursor-pointer' data-href="+res[x].acSubject+"><td>"+res[x].acName2+"</td><td>"+res[x].acAddress+"</td></tr>")
                         }
+
+                        $(".appended-search").click(function() {
+                           window.location = location.origin+"/shop?acSubject="+$(this).data("href")
+                        });
                     }
                 },
                 error:function(error)
