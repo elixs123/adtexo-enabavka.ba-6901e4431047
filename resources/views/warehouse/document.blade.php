@@ -13,7 +13,7 @@
                             <li class="breadcrumb-item">
                                 <a href="{{ route('dashboard') }}">{{ trans('skeleton.dashboard') }}</a>
                             </li>
-                            <li class="breadcrumb-item active">{{ userIsClient() ? trans('document.title_client') : $title }}</li>
+                            <li class="breadcrumb-item active">Otprema</li>
                         </ol>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                 <div id="collapse-filters" class="filters collapse show">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Narudžba</h4>
+                            <h4 class="card-title">Otprema</h4>
                             <hr>
                             <hr>
                         </div>
@@ -59,13 +59,14 @@
                                         <h5>Vrijeme kreiranja</h5>
                                         <p>{{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $order->adDate)
                                     ->format('d.m.Y') }}</p>
+                                        <h5>Vrijeme vazenja</h5>
                                         <p>{{ Carbon\Carbon::createFromFormat('Y-m-d', $order->anDaysForValid)
                                     ->format('d.m.Y') }}</p>
                                         <br>
                                         <br>
                                         <h5>Veleprodaja</h5>
                                     </div>
-                                    <div class="col-md-2 border-right">
+                                    <div class="col-md-2 ">
                                         <table>
                                             <tr>
                                                 <th><h5>Ukupno</h5></th>
@@ -95,12 +96,12 @@
                                             </tr>
                                             <tr>
                                                 @if($order->acStatus == 'R')
-                                                <td class="text-info text-right">Rezervisano</td>
-                                            @elseif($order->acStatus == 'N')
-                                                <td class="text-danger text-right">Nepotvrđeno</td>
-                                            @elseif($order->acStatus == 'O')
-                                                <td class="text-success text-right">Otpremljeno</td>
-                                            @endif
+                                                    <th class="text-info">Rezervisano</th>
+                                                @elseif($order->acStatus == 'N')
+                                                    <th  class="text-primary">Nepotvrđeno</th>
+                                                @elseif($order->acStatus == 'O')
+                                                    <th  class="text-success">Otpremljeno</th>
+                                                @endif
                                             </tr>
                                             <tr>
                                                 <th><br></th>
@@ -112,9 +113,9 @@
                                                 <form action="" method="POST">
                                                 {{ csrf_field() }}
                                                 {{ method_field('PUT') }}
-                                                    <input type="hidden" name="acStatus" value="true">
+                                                    <input type="hidden" name="acStatus" value="O">
                                                     <input type="hidden" name="orderNumber" value="{{$order->orderNumber}}">
-                                                    <th class="btn-group"><button class="btn btn-success" type="submit" @if($order->acStatus == 'O' || $order->acStatus == 'R') disabled @endif>Potvrdi</button></th>
+                                                    <th class="btn-group"><button class="btn btn-success" type="submit">Otprema</button></th>
                                                 </form>
                                             </tr>
                                         </table>
@@ -122,72 +123,6 @@
                                 </div>
                             </div>
                             <hr>
-                            <form action="" method="post">
-                                    {{ csrf_field() }}
-
-                                    <input type="hidden" name="orderNumber" value="{{$order->orderNumber}}">
-                                    <input type="hidden" name="acSubject" class="acSubject"  value="{{$order->acSubject}}">
-                                    <input type="hidden" name="acWayOfSale" class="acWayOfSale"  value="{{$subject->acWayOfSale}}">
-                                    @if(count($orderItems) > 0)
-                                        <input type="hidden" name="anNo" value="{{$orderItems[0]->anNo+1}}">
-                                    @else
-                                        <input type="hidden" name="anNo" value="1">
-                                    @endif
-                                    <div class="form-row">
-                                        <div class="form-group col-md-2">
-                                            <label for="acIdent">Šifra artikla</label>
-                                            <input type="text" class="form-control search acIdent" name="acIdent" id="acIdent" placeholder="Šifra aritkla" autocomplete="off" @if($order->acStatus == 'O' || $order->acStatus == 'R') disabled @endif  required>
-                                            
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label for="acIdent">Naziv artikla</label>
-                                            <input type="text" class="form-control search acName" name="acName" id="acName" placeholder="Naziv aritkla" autocomplete="off" @if($order->acStatus == 'O' || $order->acStatus == 'R') disabled @endif  required>
-                                            
-                                        </div>
-                                        <div class="form-group col-md-1">
-                                            <label for="anQty">MPC</label>
-                                            <input type="decimal" class="form-control anRTPrice" name="anRTPrice"  id="anRTPrice"  placeholder="MPC" style="pointer-events:none;background:#ddd;">
-                                        </div>
-                                        <div class="form-group col-md-1">
-                                            <label for="anQty">VPC</label>
-                                            <input type="decimal" class="form-control anWSPrice2" name="anWSPrice2"  id="anWSPrice2"  placeholder="VPC" style="pointer-events:none;background:#ddd;">
-                                        </div>
-                                        <div class="form-group col-md-1">
-                                            <label for="anQty">Količina</label>
-                                            <input type="decimal" class="form-control anQty" name="anQty" id="anQty"  placeholder="Kolicina" required autocomplete="off">
-                                        </div>
-                                        <div class="form-group col-md-1">
-                                            <label for="anQty">R1</label>
-                                            <input type="decimal" class="form-control anRebate1" name="anRebate1" id="anRebate1"  placeholder="Rabat1" style="pointer-events:none;background:#ddd;">
-                                        </div>
-                                        <div class="form-group col-md-1">
-                                            <label for="anQty">R2</label>
-                                            <input type="decimal" class="form-control anRebate2" name="anRebate2" id="anRebate2"  placeholder="Rabat2" autocomplete="off" style="pointer-events:none;background:#ddd;">
-                                        </div>
-                                        <div class="form-group col-md-1">
-                                            <label for="anQty">R3</label>
-                                            <input type="decimal" class="form-control anRebate3" name="anRebate3" id="anRebate3"  placeholder="Rabat3" style="pointer-events:none;background:#ddd;">
-                                        </div>
-                                        <div class="form-group col-md-1">
-                                            <button class="btn btn-success float-right" @if($order->acStatus == 'O' || $order->acStatus == 'R') disabled @endif  type="submit" style="width: 91%;">Dodaj</button>
-                                        </div>
-                                        <hr>
-                                        <div class="form-control search-result col-md-3" style="overflow: scroll;display:none;">
-                                            <table class='table table-sm table-bordered table-striped'>
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Sifra</th>
-                                                        <th scope="col">Naziv</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="search-result-table">
-                                                    
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </form>
-                                <hr>
                                 <table class="table col-12">
                                     <thead>
                                         <tr style="padding:0">
@@ -224,8 +159,8 @@
                                                     <td class="text-right">{{$item->items->acName}}</td>
 
                                                     <th class="text-right">
-
-                                                        <input type="text" name="anQty" @if($order->acStatus == 'O' || $order->acStatus == 'R') disabled @endif class="form-control col-4 float-right mr-4" value="{{$item->anQty}}">
+                                                        
+                                                        <input type="text" name="anQty" @if($order->acStatus == 'O') disabled @endif class="form-control col-4 float-right mr-4" value="{{$item->anQty}}">
                                                     </th>
 
                                                     <td class="text-right">{{number_format($item->anPrice * 1.17, 2, '.', ',') }}</td>
@@ -237,7 +172,7 @@
                                                     <th class="text-right">{{number_format($item->anForPay * $item->anQty, 2,'.', ',')}}</th>
                                                     <th class="text-right">{{number_format(($item->anForPay * $item->anQty) * 1.17, 2, '.', ',')}}</th>
                                                     <th class="p-0">
-                                                        <button class="btn btn-success float-right m-1"  @if($order->acStatus == 'O' || $order->acStatus == 'R') disabled @endif  type="submit" name="btn_update">Izmjeni</button>
+                                                        <button class="btn btn-success float-right m-1" type="submit" @if($order->acStatus == 'O') disabled @endif name="btn_update">Izmjeni</button>
                                                     </th>
                                                 </tr>
                                             </form>

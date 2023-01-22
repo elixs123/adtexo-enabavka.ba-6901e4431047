@@ -70,6 +70,7 @@ class ShopController extends Controller
     public function index(Request $request)
     {
         $order = [];
+        $pantheonOrder == true;
         if($request->has('acSubject')){
            $orderId =  $this->createOrder($request->input('acSubject'));
 
@@ -136,6 +137,7 @@ class ShopController extends Controller
 
         
         return view($view, array(
+            'pantheonOrder' => $pantheonOrder,
             'body_class' => 'ecommerce-application',
             'categories' => $categories,
             'items' => $items,

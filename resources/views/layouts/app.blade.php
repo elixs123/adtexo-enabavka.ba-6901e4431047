@@ -26,6 +26,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
         @include('partials.pusher')
     </head>
     <body class="vertical-layout vertical-menu-modern semi-dark-layout 2-columns navbar-sticky @if($scoped_footer){{ 'fixed-footer' }}@else{{ 'footer-static' }}@endif {{ isset($body_class) ?  $body_class : '' }} " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns" data-layout="semi-dark-layout">
+        
         <!-- start: header -->
         <input id="printerType" type="hidden" value="{{ auth()->user()->rPerson->printer_type }}" />
         <input id="printerReceiptUrl" type="hidden" value="{{ auth()->user()->rPerson->printer_receipt_url }}" />
@@ -33,7 +34,8 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
 
         <div class="content-overlay"></div>
         <div class="header-navbar-shadow"></div>
-        @if(1==2)
+        
+        @if(Auth::user()->admin == 1)
         <nav class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-light navbar-shadow">
             <div class="navbar-wrapper">
                 <div class="navbar-container content">
@@ -184,7 +186,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                 </div>
             </div>
         </nav>
-        @else
+        @elseif(Auth::user()->admin == 2)
         <nav class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-light navbar-shadow">
             <div class="navbar-wrapper">
                 <div class="navbar-container content">
@@ -354,6 +356,17 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
             </div>
             <div class="shadow-bottom"></div>
             <div class="main-menu-content">
+                @if(Auth::user()->admin == 3)
+                <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+                    <li class="nav-item active">
+                        <a href="{{ route('dashboard') }}">
+                            <i class="feather icon-home"></i>
+                            <span class="menu-title">Otprema</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                @else
                 <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
                     <li class="nav-item @if(request()->is('/')){{ 'active' }}@endif">
                         <a href="{{ route('dashboard') }}">
@@ -548,6 +561,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                     </li>
                     @endif
                 </ul>
+                @endif
             </div>
         </div>
         <!-- end: main menu -->
@@ -661,7 +675,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
         <div class="sidenav-overlay"></div>
         <div class="drag-target"></div>
         <!-- start: footer -->
-        @if(isset($order))
+        @if(isset($order) && isset($pantheonOrder) == false)
         
             @if(count($order))
             <footer class="footer footer-light fixed-footer @if(count($order)){{ 'text-right' }}@endif" style="position: fixed;height: 58px; background: #fff;bottom: 0; width: 100%;margin-top: 50px;">

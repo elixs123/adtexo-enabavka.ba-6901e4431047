@@ -13,7 +13,7 @@
                             <li class="breadcrumb-item">
                                 <a href="{{ route('dashboard') }}">{{ trans('skeleton.dashboard') }}</a>
                             </li>
-                            <li class="breadcrumb-item active">{{ userIsClient() ? trans('document.title_client') : $title }}</li>
+                            <li class="breadcrumb-item active">Otprema</li>
                         </ol>
                     </div>
                 </div>
@@ -55,14 +55,10 @@
                             <td class="text-info text-right">Rezervisano</td>
                         @elseif($order->acStatus == 'N')
                             <td class="text-danger text-right">Nepotvrđeno</td>
-                        @elseif($order->acStatus == 'O')
-                            <td class="text-success text-right">Otpremljeno</td>
                         @endif
                         <td class="text-right">{{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $order->adDate)->format('d.m.Y') }}</td>
                         <td class="text-right">{{ Carbon\Carbon::createFromFormat('Y-m-d', $order->anDaysForValid)->format('d.m.Y') }}</td>
-                       
-                        <td class="text-right"><a href="{{route('createorder', ['id' => $order->id])}}">{{$order->orderNumber}}</a></td>
-                       
+                        <td class="text-right"><a href="{{route('warehouse.order', ['id' => $order->id])}}">{{$order->orderNumber}}</a></td>
                         <td class="text-right">{{round($order->anForPay / 1.17, 2)}} KM</td>
                         <td class="text-right">{{round($order->anForPay * 0.145292, 2)}} KM</td>
                         <td class="text-right">{{round($order->anForPay, 2)}} KM</td>

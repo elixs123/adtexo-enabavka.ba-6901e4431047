@@ -16,6 +16,7 @@ use App\Support\Controller\DashboardHelper;
 use App\Support\Controller\DatesHelper;
 use App\Support\Controller\DocumentHelper;
 use App\Support\Controller\RouteHelper;
+use Auth;
 
 /**
  * Class HomeController
@@ -54,7 +55,12 @@ class HomeController extends Controller
      * @return \Illuminate\View\View
      */
     public function index()
-    {
+    {   
+        if(Auth::user()->admin == 3){
+           
+            return redirect()->route('warehouse.index');
+        }
+        
         return view('homepage.index')->with($this->getViewData());
     }
     

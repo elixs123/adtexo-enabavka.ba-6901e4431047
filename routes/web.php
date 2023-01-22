@@ -72,6 +72,10 @@ Route::group(['middleware' => ['auth', 'acl', 'emptystringstonull', 'user.person
     Route::post('shop', 'ShopController@addProduct')->name('addToShop');
     Route::get('shop/order/{order}', 'ShopController@finishOrder')->name('finishorder');
 
+    Route::get('warehouse', 'WarehouseController@index')->name('warehouse.index');
+    Route::get('warehouse/order/{id}', 'WarehouseController@order')->name('warehouse.order');
+    Route::put('warehouse/order/{id}', 'WarehouseController@orderSave');
+
     /*
     |--------------------------------------------------------------------------
     | Invoicing Routes

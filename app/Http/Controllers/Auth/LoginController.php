@@ -25,7 +25,7 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+       use AuthenticatesUsers;
 
     /**
      * Where to redirect users after login.
@@ -55,6 +55,7 @@ class LoginController extends Controller
         $request->merge(['email' => $request->input('email')]);
 		
         $credentials = $request->only('email', 'password');
+      
 
         $credentials['status'] = 'active';
         

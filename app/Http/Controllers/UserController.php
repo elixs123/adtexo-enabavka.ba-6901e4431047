@@ -38,6 +38,8 @@ class UserController extends Controller
     {
         $this->user = $user;
         $this->role = $role;
+
+
 		
         $this->middleware('auth');
         $this->middleware('acl:view-user', ['only' => ['index']]);
@@ -183,10 +185,13 @@ class UserController extends Controller
      */
     public function loginAs($id)
     {
+
+        
         // Remember real user id
         request()->session()->put('real_user_id', auth()->id());
         
         $user = $this->user->getOne($id);
+
     
         if (!is_null($user->client) && $user->isClient() && !is_null($lang_id = $user->client->lang_id)) {
             $lang_id = $user->client->lang_id;
@@ -195,6 +200,7 @@ class UserController extends Controller
     
             Cookie::queue(Cookie::make('lang_id', $lang_id, 525600));
         }
+
         
         auth()->loginUsingId($id);
         

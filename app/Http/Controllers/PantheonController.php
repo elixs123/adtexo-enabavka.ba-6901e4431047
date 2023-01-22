@@ -15,6 +15,7 @@ class PantheonController extends Controller
     public function index($id){
 
         $order = The_Order::where('id', $id)->firstOrFail();
+        $pantheonOrder = true;
 
         $orderItems = The_OrderItem::where('orderNumber', $order->orderNumber)->with('items')
         ->orderBy('anNo', 'desc')->get();
@@ -23,7 +24,7 @@ class PantheonController extends Controller
 
         $acPayer = Subject::where('acSubject', $order->acPayer)->first();
 
-        return view('documents.index', ['order' => $order, 'orderItems' => $orderItems, 'subject' => $subject, 'acPayer' => $acPayer]);
+        return view('documents.index', ['pantheonOrder' => $pantheonOrder, 'order' => $order, 'orderItems' => $orderItems, 'subject' => $subject, 'acPayer' => $acPayer]);
     }
 
     public function createOrder(Request $request){

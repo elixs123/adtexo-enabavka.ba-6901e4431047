@@ -21,6 +21,7 @@ class DatabaseWeb
      */
     public function handle($request, Closure $next)
     {
+       
         if ($request->session()->has('db_name')) {
             switch(session('db_name')){
                 case 'ba':
