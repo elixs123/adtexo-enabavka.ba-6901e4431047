@@ -67,7 +67,7 @@
                                         <h5>Veleprodaja</h5>
                                     </div>
                                     <div class="col-md-2 ">
-                                        <table>
+                                    <table>
                                             <tr>
                                                 <th><h5>Ukupno</h5></th>
                                             </tr>
@@ -80,8 +80,25 @@
                                                 <th class="text-right">{{number_format(($order->anForPay * 1.17) - ($order->anForPay * 1.17) / 1.17 , 2, '.', ',')}} KM</th>
                                             </tr>
                                             <tr>
+                                                <th>Brza pošta:</th>
+                                                @switch($order->anForPay)
+                                                    @case($order->anForPay < 100)
+                                                        <?php $ePost = 7.00 ?>
+                                                        <th class="text-right">7,00 KM</th>
+                                                    @break
+                                                    @case($order->anForPay >= 100 && $order->anForPay < 160)
+                                                        <?php $ePost = 3.50 ?>
+                                                        <th class="text-right">3,50 KM</th>
+                                                    @break
+                                                    @case($order->anForPay >= 160)
+                                                        <?php $ePost = 0.00 ?>
+                                                        <th class="text-right">0,00 KM</th>
+                                                    @break
+                                                @endswitch
+                                            </tr>
+                                            <tr>
                                                 <th>Ukupno sa PDV-om:</th>
-                                                <th class="text-right">{{number_format($order->anForPay * 1.17, 2, '.', ',')}} KM</th>
+                                                <th class="text-right">{{number_format(($order->anForPay * 1.17) + $ePost, 2, '.', ',')}} KM</th>
                                             </tr>
                                         </table>
                                     </div>
@@ -146,6 +163,7 @@
                                             <form action="" method="post">
                                                 {{ csrf_field() }}
                                                 {{ method_field('PUT') }}
+                                                <input type="hidden" name="updateAnQty">
                                                 <input type="hidden" name="orderNumber" value="{{$item->orderNumber}}">
                                                 <input type="hidden" name="anNo" value="{{$item->anNo}}">
                                                 <input type="hidden" name="anForPay" value="{{$item->anForPay}}">

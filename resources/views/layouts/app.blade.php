@@ -197,7 +197,7 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
                             </ul>
                            
                             @if(isset($order))
-                                @if(count($order) > 0)
+                                @if($order)
                                 <ul class="nav navbar-nav bookmark-icons d-none d-lg-block d-xl-block">
                                     <li class="nav-item">
                                         <a class="nav-link header-document-info d-flex" href="{{ route('document.show', [ScopedDocument::id()]) }}" data-toggle="tooltip" title="{{ trans('document.actions.show') }}">
@@ -677,8 +677,8 @@ $scoped_footer = isset($scoped_footer) ? $scoped_footer : ScopedDocument::exist(
         <!-- start: footer -->
         @if(isset($order) && isset($pantheonOrder) == false)
         
-            @if(count($order))
-            <footer class="footer footer-light fixed-footer @if(count($order)){{ 'text-right' }}@endif" style="position: fixed;height: 58px; background: #fff;bottom: 0; width: 100%;margin-top: 50px;">
+            @if($order)
+            <footer class="footer footer-light fixed-footer @if($order){{ 'text-right' }}@endif" style="position: fixed;height: 58px; background: #fff;bottom: 0; width: 100%;margin-top: 50px;">
                 
                 <a href="{{ route('finishorder', ['order' => $order->id]) }}" class="btn btn-success" style="margin-right: 36px;"><span class="feather icon-check"></span> Završi narudžbu</a>
                 

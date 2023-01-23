@@ -76,7 +76,7 @@
                     <!--<i class="fa fa-heart-o mr-25"></i> Wishlist-->
                 </div>--}}
                 <div class="qty">
-                    @if(count($order))
+                    @if($order)
                         @if($item->stock['anStock'] > 0)
                         <div class="">
                             <form action="{{route('addToShop')}}" method="POST">
