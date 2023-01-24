@@ -41,21 +41,21 @@
                             <div class="col-12 p-0">
                                 <hr>
                                 <div class="row">
-                                    <div class="col-md-3 border-right">
+                                    <div class="col-md-2 border-right">
                                         <h5>Mjesto isporuke</h5>
                                         <p>{{ $subject->acName2 }}</p>
                                         <p>{{ $subject->acAddress }}</p>
                                         <p>{{ $subject->acFieldSH }} {{ $subject->acFieldSl }}</p>
                                         <p>{{ $subject->acCode }}</p>
                                     </div>
-                                    <div class="col-md-3 border-right">
+                                    <div class="col-md-2 border-right">
                                         <h5>Platitelj</h5>
                                         <p>{{ $acPayer->acName2 }}</p>
                                         <p>{{ $acPayer->acAddress }}</p>
                                         <p>{{ $acPayer->acFieldSH }} {{ $subject->acFieldSl }}</p>
                                         <p>{{ $acPayer->acCode }}</p>
                                     </div>
-                                    <div class="col-md-3 border-right">
+                                    <div class="col-md-2 border-right">
                                         <h5>Vrijeme kreiranja</h5>
                                         <p>{{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $order->adDate)
                                     ->format('d.m.Y') }}</p>
@@ -66,7 +66,7 @@
                                         <br>
                                         <h5>Veleprodaja</h5>
                                     </div>
-                                    <div class="col-md-2 ">
+                                    <div class="col-md-2 border-right">
                                     <table>
                                             <tr>
                                                 <th><h5>Ukupno</h5></th>
@@ -103,7 +103,7 @@
                                         </table>
                                     </div>
                                     
-                                    <div class="col-md-1">
+                                    <div class="col-md-4">
                                         <table class="float-right">
                                             <tr>
                                                 <th><h6 style="font-size: 12px;">Broj dokumenta</h6></th>

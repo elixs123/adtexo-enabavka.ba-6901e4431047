@@ -15,7 +15,8 @@
         "maatwebsite/excel": "~2.1.0",
         "barryvdh/laravel-dompdf": "^0.8.5",
         "netresearch/jsonmapper": "^4.0",
-        "psr/container": "1.0.0"
+        "psr/container": "1.0.0",
+        "dompdf/dompdf": "^0.8"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
