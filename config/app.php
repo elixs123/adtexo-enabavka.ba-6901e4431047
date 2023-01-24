@@ -193,6 +193,7 @@ return [
         App\Support\Scoped\ScopedStockServiceProvider::class,
         App\Support\Scoped\ScopedContractServiceProvider::class,
         App\Support\Scoped\ScopedActionServiceProvider::class,
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
 
     ],
 
@@ -246,6 +247,8 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
         'VuexyAdmin' => App\Support\Html\Vuexy\Admin\VuexyAdminFacade::class,
         'ScopedDocument' => App\Support\Scoped\ScopedDocumentFacade::class,
         'ScopedStock' => App\Support\Scoped\ScopedStockFacade::class,
