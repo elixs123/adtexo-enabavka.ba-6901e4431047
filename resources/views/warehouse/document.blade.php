@@ -132,7 +132,7 @@
                                                 {{ method_field('PUT') }}
                                                     <input type="hidden" name="acStatus" value="O">
                                                     <input type="hidden" name="orderNumber" value="{{$order->orderNumber}}">
-                                                    <th class="btn-group"><button class="btn btn-success" type="submit">Otprema</button></th>
+                                                    <th class="btn-group"><button class="btn btn-success" type="submit"  @if($order->acStatus == 'O') disabled @endif>Otprema</button></th>
                                                 </form>
                                             </tr>
                                         </table>

@@ -25,26 +25,29 @@ class WarehouseController extends Controller
 {
     public $PantheonAcKey;
     public $bfRacuna;
+    public $orderNumber;
 
     public function index(){
         $orders = The_Order::with('subject')
             ->where('acStatus', 'R')
         ->get();
 
+        $pantheonOrder = false;
 
-        return view('warehouse.index', ['orders' => $orders]);
+
+        return view('warehouse.index', ['orders' => $orders, 'pantheonOrder' => $pantheonOrder]);
     }
 
-    private function createPDF($orderNumber){
+    private function createPDF(){
         ini_set('memory_limit', '2048M');
 
-        $order = The_Order::where('orderNumber', $orderNumber)->firstOrFail();
+        $order = The_Order::where('orderNumber', $this->orderNumber)->firstOrFail();
 
-        $orderItems = The_OrderItem::with('items')->where('orderNumber', $orderNumber)->get();
+        $orderItems = The_OrderItem::with('items')->where('orderNumber', $this->orderNumber)->get();
 
         $acSubject = Subject::where('acSubject', $order->acPayer)->firstOrFail();
         
-        $qrcode = base64_encode(\QrCode::format('svg')->size(100)->errorCorrection('H')->generate('233000000016'));
+        $qrcode = base64_encode(\QrCode::format('svg')->size(100)->errorCorrection('H')->generate($this->PantheonAcKey));
         
         $html = <<<HTML
         <!DOCTYPE html>
@@ -131,7 +134,7 @@ class WarehouseController extends Controller
 
             $html .= '<img style="margin-left: 70px;" src="data:image/png;base64,'.$qrcode.'">';
             $html .= '<h4>Poreska faktura/Otpremnica</h4>';
-            $html .= '<h4>23-3000-000016</h4>';
+            $html .= '<h4>'.$this->PantheonAcKey.'</h4>';
 
             $html .= '<table style="padding-top: 20px; width: 25%;">
             <tr>
@@ -165,7 +168,7 @@ class WarehouseController extends Controller
           </tr>
         </table>';
 
-          $html .= '<table style="width: 40%; position: absolute;top:140px;right:0px;border: 1px solid black;
+          $html .= '<table style="width: 40%; position: absolute;top:130px;right:0px;border: 1px solid black;
           
           background-color: #fff;
           -webkit-border-radius:4px;
@@ -188,6 +191,8 @@ class WarehouseController extends Controller
           </tr>
 
         </table>';
+
+        $html .= '<h3 style="position: absolute;top:275px;right:200px">BF: '.$this->bfRacuna.'</h3';
 
             $html .= '<table style="padding-top: 20px;" class="border-table">
             <tr>
@@ -363,9 +368,33 @@ class WarehouseController extends Controller
     public function orderSave($id, Request $request){
         $orderNumber = $request->input('orderNumber');
 
-        $this->createPDF($orderNumber);
+        $this->orderNumber = $orderNumber;
 
-        /*
+
+        $itemsToSend = [];
+
+        $order = The_Order::where('orderNumber', $orderNumber)->firstOrFail();
+
+        $orderItems = The_OrderItem::where('orderNumber', $orderNumber)->get();
+
+
+        foreach($orderItems as $item){
+            $itemsToSend[] = [
+                'poz' => $item->anNo, 
+                'artikalid' => $item->acIdent,
+                'kol' => $item->anQty,
+                'diskont1' => $item->anRebate1,
+                'diskont2' => $item->anRebate2,
+                'diskont3' => $item->anRebate3
+            ];
+        }
+        
+
+
+        $acSubject = Subject::where('acSubject', $order->acSubject)->firstOrFail();
+
+        $acPayer = Subject::where('acSubject', $order->acPayer)->firstOrFail();
+
         if($request->has('updateAnQty')){
             The_OrderItem::where('orderNumber', $request->input('orderNumber'))
                             ->where('anNo', $request->input('anNo'))
@@ -398,45 +427,32 @@ class WarehouseController extends Controller
     
             try {
                 $r = $client->request('POST', '65.109.108.106/api/insertordernew', ['form_params' => [
-                    'brojnarudzbe' =>  '#4223f',
+                    'brojnarudzbe' =>  $order->orderNumber,
                     'komercijalista' => 1,
                     'kupac' => [
-                        'kupacemailadresa' => 'test@gmail.com', 
-                        'kupactelefon' => '',
-                        'kupacadresa' => 'Ćehaje',
-                        'kupacptt' => '75350',
-                        'kupacgrad' => 'SREBRENIK',
-                        'kupacid' => '0001ALI',
+                        'kupacemailadresa' => 'nista@gmail.com', 
+                        'kupactelefon' => $acSubject->acPhone,
+                        'kupacadresa' => $acSubject->acAddress,
+                        'kupacptt' => $acSubject->acPost,
+                        'kupacgrad' => $acSubject->acFieldSH,
+                        'kupacid' => $acSubject->acSubject,
+                        'kupacnaziv' => $acSubject->acName2,
                         'tipkupca' => 'business_client',
                         'koddrzave' => 'BA'
                     ],
                     'primalac' => [
-                        'primalacnaziv' => 'ALI COMPANY d.o.o.', 
-                        'primalactelefon' => 'fskfs',
-                        'primalacadresa' => 'Ćehaje',
-                        'primalacptt' => '75350',
-                        'primalacgrad' => 'SREBRENIK',
-                        'primalacemailadresa' => 'test@gmail.com',
+                        'primalacnaziv' => $acPayer->acName2, 
+                        'primalactelefon' => $acPayer->acPhone,
+                        'primalacadresa' => $acPayer->acAddress,
+                        'primalacptt' => $acPayer->acPost,
+                        'primalacgrad' => $acPayer->acFieldSH,
+                        'primalacemailadresa' => 'nista@gmail.com',
                         
-                        'primalacid' => '0001ALI'
+                        'primalacid' => $acPayer->acSubject
                     ],
-                    'artikli' => json_encode([
-                        [
-                            'poz' => '1', 
-                            'artikalid' => '004168',
-                            'kol' => 20.00,
-                            'diskont1' => 20.00,
-                            'diskont2' => 20.00,
-                            'diskont3' => 20.00
-                        ],[
-                            'poz' => '2', 
-                            'artikalid' => '004168',
-                            'kol' => 20.00,
-                            'diskont1' => 20.00,
-                            'diskont2' => 20.00,
-                            'diskont3' => 20.00
-                        ]
-                    ])
+                    'artikli' => json_encode(
+                        $itemsToSend
+                    )
                 ]
             ],['verify' => false]);
     
@@ -444,6 +460,7 @@ class WarehouseController extends Controller
                 
                
                 $responseData = json_decode($r->getBody(), true);
+
 
                   $this->PantheonAcKey =  $responseData["podaci"]["HeadInvoice"][0]["BrojFakture"];
                   $this->printBill();
@@ -468,7 +485,7 @@ class WarehouseController extends Controller
             return redirect()->route('warehouse.index');
         }
 
-        */
+        
     }
 
     private function printBill(){
@@ -552,9 +569,9 @@ class WarehouseController extends Controller
 
             $response = $r->getBody(true)->getContents();
             
-           dd($response);
             $responseData = json_decode($r->getBody(), true);
 
+            $this->createPDF($this->orderNumber);
             
             
 
