@@ -35,8 +35,15 @@ class WarehouseController extends Controller
         return view('warehouse.index', ['orders' => $orders]);
     }
 
-    private function createPDF(){
+    private function createPDF($orderNumber){
         ini_set('memory_limit', '2048M');
+
+        $order = The_Order::where('orderNumber', $orderNumber)->firstOrFail();
+
+        $orderItems = The_OrderItem::with('items')->where('orderNumber', $orderNumber)->get();
+
+        $acSubject = Subject::where('acSubject', $order->acPayer)->firstOrFail();
+        
         $qrcode = base64_encode(\QrCode::format('svg')->size(100)->errorCorrection('H')->generate('233000000016'));
         
         $html = <<<HTML
@@ -68,6 +75,14 @@ class WarehouseController extends Controller
         .pfonts th{
             font-size: 10px;
         }
+        .pfonts h3{
+            margin: -4px;
+            padding: 0px;
+        }
+        .pfonts1 h2{
+            margin: -4px;
+            padding: 5px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -78,7 +93,10 @@ class WarehouseController extends Controller
         th, td{
             font-size: 7.5px;
         }
-        
+        h3{
+            padding:5px;
+            margin:0px;
+        }
         .naziv{
             font-weight: bold;
             padding-right: 20px;
@@ -115,18 +133,18 @@ class WarehouseController extends Controller
             $html .= '<h4>Poreska faktura/Otpremnica</h4>';
             $html .= '<h4>23-3000-000016</h4>';
 
-            $html .= '<table style="padding-top: 20px; width: 20%;">
+            $html .= '<table style="padding-top: 20px; width: 25%;">
             <tr>
               <th style="text-align: left;font-weight: bold;">Dat.izdavanja:</th>
-              <th style="text-align: left;font-weight: normal;">24.01.2023</th>
+              <th style="text-align: left;font-weight: normal;">'.Carbon::parse($order->adDate)->format('d.m.Y').'</th>
             </tr>
             <tr>
                 <th style="text-align: left;">Datum valute</th>
-                <th style="text-align: left;font-weight: normal;">23.02.2023</th>
+                <th style="text-align: left;font-weight: normal;">'.Carbon::parse($order->anDaysForValid)->format('d.m.Y').'</th>
             </tr>
             <tr>
                 <th style="text-align: left;">Mjesto, dana</th>
-                <th style="text-align: left;font-weight: normal;">Priboj, 24.01.2023.</th>
+                <th style="text-align: left;font-weight: normal;">Sarajevo, '.Carbon::parse($order->adDate)->format('d.m.Y').'</th>
             </tr>
             <tr>
                 <th style="text-align: left;">Način plačanja</th>
@@ -135,38 +153,38 @@ class WarehouseController extends Controller
 
           </table>';
 
-          $html .= '<table style="width: 40%; position: absolute;top:0px;right:20px;" class="pfonts">
+          $html .= '<table style="width: 40%; position: absolute;top:0px;right:0px;" class="pfonts1">
           <tr >
-            <th style="text-align: right;font-weight: bold;padding-left: 20px;padding-top:20px;">ADTEXO DOO SARAJEVO</th>
+            <th style="text-align: right;padding:0;margin:0;"><h2>ADTEXO DOO SARAJEVO</h2></th>
           </tr>
           <tr>
-              <th style="text-align: right;padding-left: 20px;padding-top:5px;">Marka Marulića 2</th>
+              <th style="text-align: right;padding:0;margin:0;"><h2>Marka Marulića 2</h2></th>
           </tr>
           <tr>
-              <th style="text-align: right;padding-left: 20px;padding-top:5px;">71000 Sarajevo</th>
+              <th style="text-align: right;padding:0;margin:0;"><h2>71000 Sarajevo</h2></th>
           </tr>
         </table>';
 
-          $html .= '<table style="width: 40%; position: absolute;top:120px;right:20px;border: 1px solid black;
+          $html .= '<table style="width: 40%; position: absolute;top:140px;right:0px;border: 1px solid black;
           
           background-color: #fff;
           -webkit-border-radius:4px;
           border-radius: 10px;
           border-collapse: separate;" class="pfonts">
           <tr >
-            <th style="text-align: left;font-weight: bold;padding-left: 20px;padding-top:20px;">ALI COMPANY d.o.o.</th>
+            <th style="text-align: left;font-weight: bold;padding-left: 20px;padding-top:20px;"><h3>'.$acSubject->acName2.'</h3></th>
           </tr>
           <tr>
-              <th style="text-align: left;padding-left: 20px;padding-top:5px;">Ćehaje</th>
+              <th style="text-align: left;padding-left: 20px;padding-top:5px;"><h3>'.$acSubject->acAddress.'</h3></th>
           </tr>
           <tr>
-              <th style="text-align: left;padding-left: 20px;padding-top:5px;">BA SREBRENIK</th>
+              <th style="text-align: left;padding-left: 20px;padding-top:5px;"><h3>'.$acSubject->acPost.' '.$acSubject->acFieldSH.'</h3></th>
           </tr>
           <tr>
-              <th style="text-align: left;padding-left: 20px;padding-top:25px;">ID: 209598860000</th>
+              <th style="text-align: left;padding-left: 20px;padding-top:25px;"><h3>ID: '.$acSubject->acCode.'</h3></th>
           </tr>
           <tr>
-              <th style="text-align: left;padding-left: 20px;padding-top:5px;padding-bottom:20px;">PDV: 209598860000</th>
+              <th style="text-align: left;padding-left: 20px;padding-top:5px;padding-bottom:20px;"><h3>PDV: </h3></th>
           </tr>
 
         </table>';
@@ -174,39 +192,38 @@ class WarehouseController extends Controller
             $html .= '<table style="padding-top: 20px;" class="border-table">
             <tr>
               <th style="text-align: left; padding: 5px;width: 2%;">Poz</th>
-              <th style="text-align: left;padding: 5px;">Šifra artikla</th>
+              <th style="text-align: left;padding: 5px;width: 15%;">Šifra artikla</th>
               <th style="width: 20%;text-align: left;padding: 5px;">Naziv</th>
-              <th>Jed.mera</th>
+              <th>JM</th>
               <th>Količina</th>
-              <th>VPC</th>
+              <th>Cijena</th>
+              <th>Cijena bez PDV-a</th>
               <th>R1(%)</th>
               <th>R2(%)</th>
-              <th>Prod.cijena.bez PDV</th>
-              <th>Prod.vre.bez PDV</th>
-              <th>PDV %</th>
-              <th>Iznos PDV</th>
-              <th>Fakturna cijena</th>
-              <th>Fakturna vrijednost</th>
-            </tr>
+              <th>R3(%)</th>
+              <th>Vrijednost</th>
+              <th>Ukupno sa PDV-om</th>
+            </tr>';
 
-            <tr>
-              <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;">1</td>
-              <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;">204508</td>
-              <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;">MAJONEZA KESICA 47 G ROYAL</td>
-              <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;">KOM</td>
-              <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;">12,00</td>
-              <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">0,42</td>
-              <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">5,04</td>
-              <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">0,00</td>
-              <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">0,40</td>
-              <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">4,79</td>
-              <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">28,47</td>
-              <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">1,36</td>
-              <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">6,15</td>
-              <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">0,51</td>
-            </tr>
+            foreach($orderItems as $item){
+                $html .= '
+                <tr>
+                <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;">'.$item->anNo.'</td>
+                <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;">'.$item->acIdent.'</td>
+                <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;">'.$item->items->acName.'</td>
+                <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;text-align:right;">KOM</td>
+                <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;text-align:right;">'.$item->anQty.'</td>
+                <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">'.number_format($item->anPrice * 1.17, 2, '.', ',').'</td>
+                <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">'.number_format($item->anPrice, 2, '.', ',').'</td>
+                <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">'.$item->anRebate1.'</td>
+                <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">'.$item->anRebate2.'</td>
+                <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">'.$item->anRebate3.'</td>
+                <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">'.number_format($item->anForPay * $item->anQty, 2,'.', ',').'</td>
+                <td style="padding-left: 10px;padding-bottom: 2px;padding-top:2px;padding-right: 4px; text-align: right;">'.number_format(($item->anForPay * $item->anQty) * 1.17, 2, '.', ',').'</td>
+                </tr>';
+            }
 
-          </table>';
+            $html .= '</table>';
 
 
           $html .= '<table style="width: 100%;border: none;">
@@ -215,23 +232,39 @@ class WarehouseController extends Controller
             <th style="border: none;width: 15%;"></th>
             <th style="border: none;width: 5%;"></th>
             <th style="border: none;width: 35%;text-align:left;"">Prodajna vrijednost bez PDV-a </th>
-            <th style="border: none;font-size: 10px;text-align:left;padding-right: 5px; width: 10%;">287,24</th>
+            <th style="border: none;font-size: 10px;text-align:right;width: 10%;">'.number_format($order->anForPay, 2, '.', ',').'</th>
           </tr>
           <tr style="border: none;">
             <th style="border: none;width: 15%;"></th>
             <th style="border: none;width: 15%;"></th>
             <th style="border: none;width: 20%;"></th>
             <th style="border: none;text-align:left;">+ PDV %</th>
-            <th style="border: none;font-size: 10px;text-align:left;padding-right: 5px; width: 10%;">287,24</th>
+            <th style="border: none;font-size: 10px;text-align:right; width: 10%;">'.number_format(($order->anForPay * 1.17) - ($order->anForPay * 1.17) / 1.17 , 2, '.', ',').'</th>
           </tr>
+
+          <tr style="border: none;">
+            <th style="border: none;width: 15%;"></th>
+            <th style="border: none;width: 15%;"></th>
+            <th style="border: none;width: 20%;"></th>
+            <th style="border: none;text-align:left;">Brza pošta</th>
+            ';
+            $epost = 7.00;
+           switch($order->anForPay){
+            case($order->anForPay < 100):
+                $ePost = 7.00;
+                $html .= '<th style="border: none;font-size: 10px;text-align:right; width: 10%;">'.number_format($ePost, 2, '.', ',').'</th>';
+                break;
+            case($order->anForPay >= 100 && $order->anForPay < 160):
+                $ePost = 3.50;
+                $html .= '<th style="border: none;font-size: 10px;text-align:right; width: 10%;">'.number_format($ePost, 2, '.', ',').'</th>';
+                break;
+            case($order->anForPay >= 160):
+                    $ePost = 0.00;
+                    $html .= '<th style="border: none;font-size: 10px;text-align:right; width: 10%;">'.number_format($ePost, 2, '.', ',').'</th>';
+                    break;
+           }
+         $html .= '</tr>
           
-            <tr>
-            <th style="border: none;width: 15%;"></th>
-            <th style="border: none;width: 15%;"></th>
-            <th style="border: none;width: 60%;"></th>
-            <th style="border: none;text-align:left;">Zaokruženje</th>
-            <th style="border: none;font-size: 10px;text-align:left;padding-right: 5px; width: 10%;"></th>
-            </tr>
             <tr>
             <th style="border: none;width: 15%;"></th>
             <th style="border: none;width: 15%;"></th>
@@ -243,27 +276,27 @@ class WarehouseController extends Controller
             <th style="border: none;width: 15%;"></th>
             <th style="border: none;width: 20%;"></th>
             <th style="border: none;text-align:left;">Fakturna vrijednost sa PDV-om</th>
-            <th style="border: none;font-size: 10px;text-align:left;padding-right: 5px; width: 10%;">336,06</th>
+            <th style="border: none;font-size: 10px;text-align:right;width: 10%;">'.number_format(($order->anForPay * 1.17) + $ePost, 2, '.', ',').'</th>
             </tr>
           </table>';
         
-          $html .= '<p style="color: red;margin-top: 150px;">Vaša dugovanja na dan 24.01.2023. iznose:</p>';
-          $html .= '<p style="color: red;padding:0;margin:0;">Dospjelo:</p>';
-          $html .= '<p style="color: red;padding:0;margin:0;">Nedospijelo:</p>';
+          $html .= '<h5 style="color: red;margin-top: 150px;">Vaša dugovanja na dan 24.01.2023. iznose:</h5>';
+          $html .= '<h5 style="color: red;padding:0;margin:0;">Dospjelo:</h5>';
+          $html .= '<h5 style="color: red;padding:0;margin:0;">Nedospijelo:</h5>';
 
           $html .= '<table style="padding-top: 20px;" class="border-table">
             <tr>
               <th style="text-align: left; padding: 5px;width: 30%;">Rekapitulacija poreza</th>
               <th style="text-align: right;padding: 5px;">Osnovica poreza</th>
-              <th style="text-align: right;">Vrednost PDV-a</th>
-              <th style="text-align: right;">Vrednost poreske fakture</th>
+              <th style="text-align: right;">Vrijednost PDV-a</th>
+              <th style="text-align: right;">Vrijednost poreske fakture</th>
             </tr>
 
             <tr>
               <td style="text-align: left;padding-right: 10px;padding-bottom: 2px;padding-top:2px;">PDV - isporuke/prijemi</td>
-              <td style="text-align: right;padding-right: 10px;padding-bottom: 2px;padding-top:2px;">287,24</td>
-              <td style="text-align: right;padding-right: 10px;padding-bottom: 2px;padding-top:2px;">48,82</td>
-              <td style="text-align: right;padding-right: 10px;padding-bottom: 2px;padding-top:2px;">336,06</td>
+              <td style="text-align: right;padding-right: 10px;padding-bottom: 2px;padding-top:2px;">'.number_format($order->anForPay, 2, '.', ',').'</td>
+              <td style="text-align: right;padding-right: 10px;padding-bottom: 2px;padding-top:2px;">'.number_format(($order->anForPay * 1.17) - ($order->anForPay * 1.17) / 1.17 , 2, '.', ',').'</td>
+              <td style="text-align: right;padding-right: 10px;padding-bottom: 2px;padding-top:2px;">'.number_format(($order->anForPay * 1.17) + $ePost, 2, '.', ',').'</td>
             </tr>
           </table>';
 
@@ -275,7 +308,7 @@ class WarehouseController extends Controller
         
           $html .= '<table style="padding-top: 20px;">
           <tr>
-            <th style="text-align: left; padding: 5px;margin: 25px;">Odgovorna osoba:</th>
+            <th style="text-align: center; padding: 5px;margin: 25px;">Odgovorna osoba</th>
             <th style="text-align: center;padding-right: 15px;">Fakturisao</th>
             <th style="text-align: center;padding-right: 15px;">Kontrolisao:</th>
             <th style="text-align: center;padding-right: 15px;">Robu izdao</th>
@@ -283,11 +316,11 @@ class WarehouseController extends Controller
           </tr>
 
           <tr>
-            <td style="text-align: left;padding-right: 10px;padding-bottom: 2px;padding-top:2px;">
+            <td style="text-align: center;padding-right: 10px;padding-bottom: 2px;padding-top:2px;">
             Adi Kurtović
             <hr>
             </td>
-            <td style="text-align: right;padding-right: 10px;padding-bottom: 2px;padding-top:13px;">
+            <td style="text-align: center;padding-right: 10px;padding-bottom: 2px;padding-top:13px;">
              <hr>
              </td>
             <td style="text-align: right;padding-right: 10px;padding-bottom: 2px;padding-top:13px;"><hr></td>
@@ -328,7 +361,9 @@ class WarehouseController extends Controller
     }
 
     public function orderSave($id, Request $request){
-        $this->createPDF();
+        $orderNumber = $request->input('orderNumber');
+
+        $this->createPDF($orderNumber);
 
         /*
         if($request->has('updateAnQty')){
