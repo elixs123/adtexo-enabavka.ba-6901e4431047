@@ -55,6 +55,8 @@
                             <td class="text-info text-right">Rezervisano</td>
                         @elseif($order->acStatus == 'N')
                             <td class="text-danger text-right">Nepotvrđeno</td>
+                        @elseif($order->acStatus == 'O')
+                            <td class="text-success text-right">Otpremljeno</td>
                         @endif
                         <td class="text-right">{{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $order->adDate)->format('d.m.Y') }}</td>
                         <td class="text-right">{{ Carbon\Carbon::createFromFormat('Y-m-d', $order->anDaysForValid)->format('d.m.Y') }}</td>

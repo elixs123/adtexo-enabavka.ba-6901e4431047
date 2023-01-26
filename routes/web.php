@@ -75,6 +75,7 @@ Route::group(['middleware' => ['auth', 'acl', 'emptystringstonull', 'user.person
     Route::get('warehouse', 'WarehouseController@index')->name('warehouse.index');
     Route::get('warehouse/order/{id}', 'WarehouseController@order')->name('warehouse.order');
     Route::put('warehouse/order/{id}', 'WarehouseController@orderSave');
+    Route::post('warehouse/order/{id}', 'WarehouseController@openPDF');
 
     /*
     |--------------------------------------------------------------------------

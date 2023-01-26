@@ -127,13 +127,22 @@
                                                 <th><br></th>
                                             </tr>
                                             <tr>
-                                                <form action="" method="POST">
-                                                {{ csrf_field() }}
-                                                {{ method_field('PUT') }}
-                                                    <input type="hidden" name="acStatus" value="O">
-                                                    <input type="hidden" name="orderNumber" value="{{$order->orderNumber}}">
-                                                    <th class="btn-group"><button class="btn btn-success" type="submit"  @if($order->acStatus == 'O') disabled @endif>Otprema</button></th>
-                                                </form>
+                                                @if($order->acStatus == 'O')
+                                                    <form action="" method="POST">
+                                                    {{ csrf_field() }}
+                                                        <input type="hidden" name="openOrder" value="true">
+                                                        <input type="hidden" name="orderNumber" value="{{$order->orderNumber}}">
+                                                        <th class="btn-group"><button class="btn btn-success" type="submit"><i  class="feather icon-file-text"></i> A4 Otpremnica</button></th>
+                                                    </form>
+                                                @else
+                                                    <form action="" method="POST">
+                                                    {{ csrf_field() }}
+                                                    {{ method_field('PUT') }}
+                                                        <input type="hidden" name="acStatus" value="O">
+                                                        <input type="hidden" name="orderNumber" value="{{$order->orderNumber}}">
+                                                        <th class="btn-group"><button class="btn btn-success" type="submit"  @if($order->acStatus == 'O') disabled @endif><i  class="feather icon-printer"></i> Račun</button></th>
+                                                    </form>
+                                                @endif
                                             </tr>
                                         </table>
                                     </div>

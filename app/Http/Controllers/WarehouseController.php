@@ -30,12 +30,25 @@ class WarehouseController extends Controller
     public function index(){
         $orders = The_Order::with('subject')
             ->where('acStatus', 'R')
+            ->orWhere('acStatus', 'O')
+            ->orderBy('id', 'desc')
         ->get();
 
         $pantheonOrder = false;
 
 
         return view('warehouse.index', ['orders' => $orders, 'pantheonOrder' => $pantheonOrder]);
+    }
+
+    public function openPDF(Request $request){
+        $this->orderNumber = $request->input('orderNumber');
+
+        $order = The_Order::where('orderNumber', $this->orderNumber)->firstOrFail();
+
+        $this->bfRacuna = $order->bf;
+        $this->PantheonAcKey = $order->acKeyMove;
+
+        $this->createPDF();
     }
 
     private function createPDF(){
@@ -192,7 +205,7 @@ class WarehouseController extends Controller
 
         </table>';
 
-        $html .= '<h3 style="position: absolute;top:275px;right:200px">BF: '.$this->bfRacuna.'</h3';
+        $html .= '<h5 style="position: absolute;top:260px;right:225px">BF: '.trim($this->bfRacuna).'</h5';
 
             $html .= '<table style="padding-top: 20px;" class="border-table">
             <tr>
@@ -479,6 +492,8 @@ class WarehouseController extends Controller
 
             The_Order::where('id', $id)
                             ->update([
+                                'acKeyMove' => $this->PantheonAcKey,
+                                'bf' => trim($this->bfRacuna),
                                 'acStatus' => 'O'
                             ]);
                             
