@@ -514,7 +514,7 @@ class WarehouseController extends Controller
         ]);
 
         try {
-            $r = $client->request('POST', 'http://10.20.99.179:8085/stampatifiskalniracun', ['body' =>
+            $r = $client->request('POST', 'localhost:8085/stampatifiskalniracun', ['body' =>
                 "<?xml version='1.0' encoding='utf-8'?><RacunZahtjev><BrojZahtjeva>1164220</BrojZahtjeva><VrstaZahtjeva>0</VrstaZahtjeva><NoviObjekat><Datum>2022-11-16T07:50:18</Datum><Napomena>2232520110180
                 POS KUPAC
                 Sarajevo BIH 
